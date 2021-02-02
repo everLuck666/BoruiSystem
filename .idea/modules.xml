@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/BoruiSystem.iml" filepath="$PROJECT_DIR$/.idea/BoruiSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-common/BoruiSystem-common.iml" filepath="$PROJECT_DIR$/BoruiSystem-common/BoruiSystem-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-configuration/BoruiSystem-configuration.iml" filepath="$PROJECT_DIR$/BoruiSystem-configuration/BoruiSystem-configuration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-controller/BoruiSystem-controller.iml" filepath="$PROJECT_DIR$/BoruiSystem-controller/BoruiSystem-controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-generator/BoruiSystem-generator.iml" filepath="$PROJECT_DIR$/BoruiSystem-generator/BoruiSystem-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-mapper/BoruiSystem-mapper.iml" filepath="$PROJECT_DIR$/BoruiSystem-mapper/BoruiSystem-mapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-pojo/BoruiSystem-pojo.iml" filepath="$PROJECT_DIR$/BoruiSystem-pojo/BoruiSystem-pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoruiSystem-service/BoruiSystem-service.iml" filepath="$PROJECT_DIR$/BoruiSystem-service/BoruiSystem-service.iml" />
+    </modules>
+  </component>
+</project>

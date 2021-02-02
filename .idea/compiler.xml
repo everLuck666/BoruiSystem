@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="BoruiSystem-pojo" />
+        <module name="BoruiSystem-common" />
+        <module name="BoruiSystem-controller" />
+        <module name="BoruiSystem-service" />
+        <module name="BoruiSystem-generator" />
+        <module name="BoruiSystem-configuration" />
+        <module name="BoruiSystem-mapper" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="BoruiSystem-common" target="1.8" />
+      <module name="BoruiSystem-configuration" target="1.8" />
+      <module name="BoruiSystem-controller" target="1.8" />
+      <module name="BoruiSystem-generator" target="1.8" />
+      <module name="BoruiSystem-mapper" target="1.8" />
+      <module name="BoruiSystem-pojo" target="1.8" />
+      <module name="BoruiSystem-service" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BoruiSystem-common" options="-parameters" />
+      <module name="BoruiSystem-configuration" options="-parameters" />
+      <module name="BoruiSystem-controller" options="-parameters" />
+      <module name="BoruiSystem-generator" options="-parameters" />
+      <module name="BoruiSystem-mapper" options="-parameters" />
+      <module name="BoruiSystem-pojo" options="-parameters" />
+      <module name="BoruiSystem-service" options="-parameters" />
+    </option>
+  </component>
+</project>
