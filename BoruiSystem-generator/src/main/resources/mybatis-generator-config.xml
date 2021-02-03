@@ -32,7 +32,7 @@
 		<!-- ../maker-assistant-service/src/test/java -->
 		<plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
 			<property name="targetProject"
-					  value="TeachingSystem-mapper/src/main/java" />
+					  value="BoruiSystem-mapper/src/main/java" />
 			<property name="targetPackage"
 					  value="net.seehope.mapper" />
 			<property name="templatePath" value="generator/mapper.ftl" />
@@ -44,7 +44,7 @@
 		<!--net.seehope.mapper.xml -->
 		<plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
 			<property name="targetProject"
-					  value="TeachingSystem-mapper/src/main/resources" />
+					  value="BoruiSystem-mapper/src/main/resources" />
 			<property name="targetPackage" value="mappers" />
 			<property name="mapperPackage"
 					  value="net.seehope.mapper" />
@@ -82,7 +82,7 @@
 		<!--MyBatis 生成器只需要生成 Model -->
 		<javaModelGenerator
 				targetPackage="net.seehope.pojo"
-				targetProject="TeachingSystem-pojo/src/main/java" />
+				targetProject="BoruiSystem-pojo/src/main/java" />
 
 		<!-- 找到需要自动创建的表 -->
 		<table tableName="%">

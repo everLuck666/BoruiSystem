@@ -6,90 +6,114 @@ import javax.persistence.*;
 @Table(name = "`users`")
 public class Users implements Serializable {
     @Id
-    @Column(name = "`id`")
-    private String id;
+    @Column(name = "`user_id`")
+    private String userId;
 
-    @Column(name = "`sno`")
-    private String sno;
+    @Column(name = "`user_name`")
+    private String userName;
 
-    @Column(name = "`password`")
-    private String password;
+    @Column(name = "`email`")
+    private String email;
 
-    @Column(name = "`identity`")
-    private Integer identity;
+    @Column(name = "`phone`")
+    private String phone;
 
-    @Column(name = "`version`")
-    private Integer version;
+    @Column(name = "`address`")
+    private String address;
+
+    /**
+     * 是否订阅
+     */
+    @Column(name = "`subscribe_status`")
+    private String subscribeStatus;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * @return id
+     * @return user_id
      */
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
     /**
-     * @param id
+     * @param userId
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
-     * @return sno
+     * @return user_name
      */
-    public String getSno() {
-        return sno;
+    public String getUserName() {
+        return userName;
     }
 
     /**
-     * @param sno
+     * @param userName
      */
-    public void setSno(String sno) {
-        this.sno = sno;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**
-     * @return password
+     * @return email
      */
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
     /**
-     * @param password
+     * @param email
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**
-     * @return identity
+     * @return phone
      */
-    public Integer getIdentity() {
-        return identity;
+    public String getPhone() {
+        return phone;
     }
 
     /**
-     * @param identity
+     * @param phone
      */
-    public void setIdentity(Integer identity) {
-        this.identity = identity;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     /**
-     * @return version
+     * @return address
      */
-    public Integer getVersion() {
-        return version;
+    public String getAddress() {
+        return address;
     }
 
     /**
-     * @param version
+     * @param address
      */
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * 获取是否订阅
+     *
+     * @return subscribe_status - 是否订阅
+     */
+    public String getSubscribeStatus() {
+        return subscribeStatus;
+    }
+
+    /**
+     * 设置是否订阅
+     *
+     * @param subscribeStatus 是否订阅
+     */
+    public void setSubscribeStatus(String subscribeStatus) {
+        this.subscribeStatus = subscribeStatus;
     }
 }
