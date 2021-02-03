@@ -13,17 +13,18 @@ public class UserServiceImpl implements UserService {
     UsersMapper usersMapper;
     @Override
     public Users getUserInfo(String sno) {
-        Users users = new Users();
-        users.setSno(sno);
+//        Users users = new Users();
+//        users.setSno(sno);
 
-        return usersMapper.selectOne(users);
+//        return usersMapper.selectOne(users);
+        return null;
     }
 
     @Override
     public void deleteUser(String userId) {
-        Users users = new Users();
-        users.setSno(userId);
-        usersMapper.delete(users);
+//        Users users = new Users();
+//        users.setSno(userId);
+//        usersMapper.delete(users);
     }
 
     @Override
@@ -39,21 +40,21 @@ public class UserServiceImpl implements UserService {
 
         Users user = null;
 
-        if (!StringUtils.isEmpty(bo.getSno()+"")) {
-            Users temp = new Users();
-            temp.setSno(bo.getSno());
-            try{
-                user = usersMapper.selectOne(temp);
-            }catch (Exception e){
-                throw new RuntimeException("找到了两个用户");
-            }
-            if (user == null) {
-                throw new RuntimeException("用户不存在");
-            }
-            if (!StringUtils.equals(bo.getPassword(), user.getPassword())) {
-                throw new RuntimeException("密码错误");
-            }
-        }
+//        if (!StringUtils.isEmpty(bo.getSno()+"")) {
+//            Users temp = new Users();
+//            temp.setSno(bo.getSno());
+//            try{
+//                user = usersMapper.selectOne(temp);
+//            }catch (Exception e){
+//                throw new RuntimeException("找到了两个用户");
+//            }
+//            if (user == null) {
+//                throw new RuntimeException("用户不存在");
+//            }
+//            if (!StringUtils.equals(bo.getPassword(), user.getPassword())) {
+//                throw new RuntimeException("密码错误");
+//            }
+//        }
 
         return user;
     }
