@@ -1,25 +1,9 @@
 package net.seehope.controller;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import net.seehope.UserService;
-import net.seehope.common.RestfulJson;
-import net.seehope.common.UserType;
-import net.seehope.exception.PassPortException;
-import net.seehope.jwt.JWTUtils;
-import net.seehope.pojo.Users;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @RequestMapping("user")
 @RestController

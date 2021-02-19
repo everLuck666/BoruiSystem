@@ -2,10 +2,14 @@ package net.seehope.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import net.seehope.UserService;
-import net.seehope.mapper.UsersMapper;
-import net.seehope.pojo.Users;
-import net.seehope.pojo.bo.UsersInfoBo;
+import net.seehope.OrdersService;
+import net.seehope.mapper.InvoicesMapper;
+import net.seehope.mapper.OrdersMapper;
+import net.seehope.pojo.Invoices;
+import net.seehope.pojo.Orders;
+import net.seehope.pojo.bo.GetOrdersBo;
+import net.seehope.pojo.bo.OrdersInfoBo;
+import net.seehope.pojo.bo.TotalStatisticBo;
 import net.seehope.util.ExcelFormatUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.streaming.SXSSFCell;
@@ -29,82 +33,80 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class OrdersServiceImpl implements OrdersService {
 
-    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
     @Autowired
-    UsersMapper usersMapper;
-    @Override
-    public Users getUserInfo(String sno) {
-//        Users users = new Users();
-//        users.setSno(sno);
+    OrdersMapper ordersMapper;
 
-//        return usersMapper.selectOne(users);
+    @Autowired
+    InvoicesMapper invoicesMapper;
+
+    @Override
+    public Integer getWaitingOrders() {
+        return ordersMapper.queryWaitingOrders();
+    }
+
+    @Override
+    public Integer getFinishedOrders() {
+        return ordersMapper.queryFinishedOrders();
+    }
+
+    @Override
+    public List salesStatistic() {
         return null;
     }
 
     @Override
-    public void deleteUser(String userId) {
-//        Users users = new Users();
-//        users.setSno(userId);
-//        usersMapper.delete(users);
+    public TotalStatisticBo totalStatistic() {
+        return null;
     }
 
     @Override
-    public void insertUser(Users user) {
-
-            usersMapper.insert(user);
-
-
-    }
-
-    @Override
-    public Users login(Users bo) {
-
-        Users user = null;
-
-//        if (!StringUtils.isEmpty(bo.getSno()+"")) {
-//            Users temp = new Users();
-//            temp.setSno(bo.getSno());
-//            try{
-//                user = usersMapper.selectOne(temp);
-//            }catch (Exception e){
-//                throw new RuntimeException("找到了两个用户");
-//            }
-//            if (user == null) {
-//                throw new RuntimeException("用户不存在");
-//            }
-//            if (!StringUtils.equals(bo.getPassword(), user.getPassword())) {
-//                throw new RuntimeException("密码错误");
-//            }
-//        }
-
-        return user;
-    }
-
-    @Override
-    public void deleteClient(String userId) {
-        Users users = new Users();
-        users.setUserId(userId);
-        usersMapper.delete(users);
-    }
-
-    @Override
-    public PageInfo getClients(Integer page, Integer pageSize) {
-        PageHelper.startPage(page,pageSize);
-        List clients = usersMapper.queryUserInfos();
-        PageInfo pageInfo = new PageInfo(clients);
+    public PageInfo getAllOrders(GetOrdersBo ordersBo) {
+        PageHelper.startPage(ordersBo.getPage(),ordersBo.getPageSize());
+        List orders = ordersMapper.queryOrdersBy(ordersBo.getStatus(),ordersBo.getOrderId());
+        PageInfo pageInfo = new PageInfo(orders);
         return pageInfo;
     }
 
     @Override
-    public ResponseEntity<byte[]> exportClientExcel(HttpServletRequest request, HttpServletResponse response, String excelName) {
+    public void updateOrder(String orderId) {
+        Orders orders = new Orders();
+        orders.setOrderId(orderId);
+        Orders orders1 = ordersMapper.selectOne(orders);
+        ordersMapper.delete(orders);
+        orders1.setStatus("1");
+        ordersMapper.insert(orders1);
+    }
+
+    /**
+     * 获取订单发票信息
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Invoices getInvoices(String orderId) {
+        Invoices invoices = new Invoices();
+        invoices.setOrderId(orderId);
+        return invoicesMapper.selectOne(invoices);
+    }
+
+    /**
+     * 导出订单数据到Excel表
+     * @param request
+     * @param response
+     * @param excelName
+     * @return
+     */
+    @Override
+    public ResponseEntity<byte[]> exportOrderExcel(HttpServletRequest request, HttpServletResponse response, String excelName) {
         try {
             logger.info(">>>>>>>>>>开始导出excel>>>>>>>>>>");
 
 
-            List<UsersInfoBo> list=usersMapper.queryUserInfos();
+            List<OrdersInfoBo> list=ordersMapper.queryAllOrders();
 
             BaseFrontServiceImpl baseFrontController = new BaseFrontServiceImpl();
             return baseFrontController.buildResponseEntity(export(list), excelName + ".xlsx");
@@ -115,11 +117,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private InputStream export(List<UsersInfoBo> list) {
+    private InputStream export(List<OrdersInfoBo> list) {
         logger.info(">>>>>>>>>>>>>>>>>>>>开始进入导出方法>>>>>>>>>>");
         Map<String, String> map = new HashMap();
-        map.put("0","否");
-        map.put("1","是");
+        map.put("0","未发货");
+        map.put("1","已发货");
+        map.put("2","无");
+        map.put("3","普通发票");
+        map.put("4","专用发票");
         ByteArrayOutputStream output = null;
         InputStream inputStream1 = null;
         SXSSFWorkbook wb = new SXSSFWorkbook(1000);// 保留1000条数据在内存中
@@ -129,11 +134,11 @@ public class UserServiceImpl implements UserService {
         CellStyle content = ExcelFormatUtil.contentStyle(wb);// 报表体样式
 
         // 每一列字段名
-        String[] strs = new String[] { "订阅", "客户姓名", "联系方式", "邮箱", "收货地址",
-                "购买商品", "订单总额"};
+        String[] strs = new String[] { "订单号", "商品名称", "商品数量", "买家姓名", "联系方式",
+                "收货地址","订单总额","下单时间","备注信息","发票","状态"};
 
         // 字段名所在表格的宽度
-        int[] ints = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000};
+        int[] ints = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000};
 
         // 设置表头样式
         ExcelFormatUtil.initTitleEX(sheet, header, strs, ints);
@@ -142,12 +147,20 @@ public class UserServiceImpl implements UserService {
         if (list != null && list.size() > 0) {
             logger.info(">>>>>>>>>>>>>>>>>>>>开始遍历数据组装单元格内容>>>>>>>>>>");
             for (int i = 0; i < list.size(); i++) {
-                UsersInfoBo user = list.get(i);
+                OrdersInfoBo user = list.get(i);
                 SXSSFRow row = sheet.createRow(i + 1);
                 int j = 0;
 
                 SXSSFCell cell = row.createCell(j++);
-                cell.setCellValue(map.get(user.getSubscribeStatus()));
+                cell.setCellValue(user.getOrderId());
+                cell.setCellStyle(content);
+
+                cell = row.createCell(j++);
+                cell.setCellValue(user.getProductName());
+                cell.setCellStyle(content);
+
+                cell = row.createCell(j++);
+                cell.setCellValue(user.getProductNumber());
                 cell.setCellStyle(content);
 
                 cell = row.createCell(j++);
@@ -159,21 +172,28 @@ public class UserServiceImpl implements UserService {
                 cell.setCellStyle(content);
 
                 cell = row.createCell(j++);
-                cell.setCellValue(user.getEmail());
-                cell.setCellStyle(content);
-
-                cell = row.createCell(j++);
                 cell.setCellValue(user.getAddress());
-                cell.setCellStyle(content);
-
-                cell = row.createCell(j++);
-                cell.setCellValue(user.getProductName());
                 cell.setCellStyle(content);
 
                 cell = row.createCell(j++);
                 cell.setCellValue(user.getOrderAmout());
                 cell.setCellStyle(content);
 
+                cell = row.createCell(j++);
+                cell.setCellValue(user.getOrderTime());
+                cell.setCellStyle(content);
+
+                cell = row.createCell(j++);
+                cell.setCellValue(user.getRemark());
+                cell.setCellStyle(content);
+
+                cell = row.createCell(j++);
+                cell.setCellValue(map.get(user.getInvoicesType()));
+                cell.setCellStyle(content);
+
+                cell = row.createCell(j++);
+                cell.setCellValue(map.get(map.get(user.getStatus())));
+                cell.setCellStyle(content);
 
             }
             logger.info(">>>>>>>>>>>>>>>>>>>>结束遍历数据组装单元格内容>>>>>>>>>>");
@@ -199,3 +219,4 @@ public class UserServiceImpl implements UserService {
         return inputStream1;
     }
 }
+
