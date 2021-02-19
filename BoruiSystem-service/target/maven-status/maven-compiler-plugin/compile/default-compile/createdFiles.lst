@@ -1,0 +1,16 @@
+net/seehope/impl/ScoreServiceImpl.class
+net/seehope/impl/UserServiceImpl.class
+net/seehope/StudentService.class
+net/seehope/UserService.class
+net/seehope/impl/InformationServiceImpl.class
+net/seehope/impl/DepartmentServiceImpl.class
+net/seehope/impl/StudentServiceImpl.class
+net/seehope/CourseManagerService.class
+net/seehope/StatisticalService.class
+net/seehope/impl/StatisticalServiceImpl.class
+net/seehope/DepartmentService.class
+net/seehope/TeacherService.class
+net/seehope/impl/TeacherServiceImpl.class
+net/seehope/InformationService.class
+net/seehope/impl/CourseManagerServiceImpl.class
+net/seehope/ScoreService.class

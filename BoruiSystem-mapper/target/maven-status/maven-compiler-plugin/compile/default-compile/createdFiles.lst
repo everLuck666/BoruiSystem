@@ -1,0 +1,7 @@
+net/seehope/mapper/CourseMapper.class
+net/seehope/mapper/DepartmentMapper.class
+net/seehope/mapper/ScMapper.class
+net/seehope/mapper/UsersMapper.class
+net/seehope/mapper/TeacherMapper.class
+net/seehope/mapper/StudentMapper.class
+net/seehope/mapper/ScoreMapper.class

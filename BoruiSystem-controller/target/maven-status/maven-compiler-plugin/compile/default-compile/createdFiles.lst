@@ -1,0 +1,13 @@
+net/seehope/controller/LoginController.class
+net/seehope/controller/InformationController.class
+net/seehope/controller/ScoreManagerController.class
+net/seehope/controller/CourseManagerController.class
+net/seehope/controller/ChooseCourseController.class
+net/seehope/Application.class
+net/seehope/controller/DepartmentManagerController.class
+net/seehope/filter/AllowOriginFilter.class
+net/seehope/controller/StudentManagerController.class
+net/seehope/controller/TeacherManagerController.class
+net/seehope/config/WebConfig.class
+net/seehope/controller/StatisticalController.class
+net/seehope/interceptor/MyInterceptor.class
