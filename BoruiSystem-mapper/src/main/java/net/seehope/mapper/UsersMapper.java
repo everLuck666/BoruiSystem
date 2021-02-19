@@ -1,6 +1,9 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.Users;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -8,9 +11,13 @@ import org.apache.ibatis.annotations.Param;
 *
 * @author mapper-generator
 */
+@Repository
 public interface UsersMapper extends tk.mybatis.mapper.common.Mapper<Users> {
     //更新版本号
     void updateVersion(@Param("version")String version, @Param("userId")String userId);
+
+    //查找所有客户信息
+    List queryUserInfos();
 }
 
 
