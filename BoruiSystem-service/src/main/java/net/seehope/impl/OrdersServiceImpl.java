@@ -4,6 +4,7 @@ import com.sun.tools.corba.se.idl.constExpr.Or;
 import io.swagger.models.auth.In;
 import net.seehope.IndexService;
 import net.seehope.OrdersService;
+import net.seehope.common.OrderType;
 import net.seehope.common.SendStatus;
 import net.seehope.common.UserType;
 import net.seehope.mapper.GoodsMapper;
@@ -187,6 +188,7 @@ public class OrdersServiceImpl implements OrdersService {
 
             users.setSubscribeStatus(payBo.getFlag());
             users.setUserId(userId);
+            users.setUserName(payBo.getUserName());
             users.setVersion("0");
             users.setAddress(payBo.getAddress());
             users.setEmail(payBo.getEmail());
@@ -211,6 +213,7 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setRemark(payBo.getNote());//客户的备注
             orders.setStatus(SendStatus.UNSEND.getStatus()+"");//发货未发货
             orders.setUserId(userId);
+            orders.setOrderStatus(OrderType.NOFINISH.getType()+"");
             orders.setOrderTime(new Date());
             ordersMapper.insert(orders);
         }

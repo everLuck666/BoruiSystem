@@ -4,7 +4,6 @@ package com.github.wxpay.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.wxpay.bo.PayBo;
 import com.github.wxpay.bo.UserOrderInformationBo;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.github.wxpay.service.WxPayService;
@@ -71,6 +70,9 @@ public class WxpayController {
         payBo.setTaxId(jsonObject.getString("taxId"));
         payBo.setFlag(jsonObject.getString("flag"));//判断是否加入用户体验计划
         payBo.setInvoiceFlag(jsonObject.getString("invoiceFlag"));//是否需要发票
+        payBo.setInvoiceType(jsonObject.getString("invoiceType"));
+        payBo.setNote(jsonObject.getString("remark"));//备注
+
 
 
 
@@ -109,7 +111,7 @@ public class WxpayController {
             ip = ips[0].trim();
         }
        // return wxPayService.wxPay(userId,ip);
-         wxPayService.doWx(request,response,ip);
+        // wxPayService.doWx(request,response,ip);
         return null;
     }
 

@@ -90,7 +90,7 @@ public class SmsSendServiceImpl implements SmsSendService {
 //需要发送的手机号
         smsRequestParam.put("mobile", bo.getMobile());
 //商户提交的订单号（商户保证其唯一性）
-        smsRequestParam.put("order_id",bo.getOrderId();
+        smsRequestParam.put("order_id",bo.getOrderId());
 //用户服务器时间戳(13位),JDK8版本可以使用String.valueOf(Instant.now().toEpochMilli())获取,JDK7版本可以使用String.valueOf(System.currentTimeMillis())获取
         smsRequestParam.put("time", String.valueOf(Instant.now().toEpochMilli()));
 //模板编号

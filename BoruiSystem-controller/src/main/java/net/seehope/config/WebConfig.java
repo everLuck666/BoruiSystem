@@ -53,18 +53,18 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        //拦截教师
-        List includePathLists = new ArrayList();
-        includePathLists.add("/students/student");
-        registry.addInterceptor(new MyInterceptor(new String[]{UserType.TEACHER.getType() + ""}, "不是老师token", userService))
-                .addPathPatterns(includePathLists);
-
-
-        //拦截学生
-        List studentIncludePathLists = new ArrayList();
-        studentIncludePathLists.add("/choose/choose");
-        registry.addInterceptor(new MyInterceptor(new String[]{UserType.STUDENT.getType() + ""}, "不是学生token", userService))
-                .addPathPatterns(studentIncludePathLists);
+//        //拦截教师
+//        List includePathLists = new ArrayList();
+//        includePathLists.add("/students/student");
+//        registry.addInterceptor(new MyInterceptor(new String[]{UserType.TEACHER.getType() + ""}, "不是老师token", userService))
+//                .addPathPatterns(includePathLists);
+//
+//
+//        //拦截学生
+//        List studentIncludePathLists = new ArrayList();
+//        studentIncludePathLists.add("/choose/choose");
+//        registry.addInterceptor(new MyInterceptor(new String[]{UserType.STUDENT.getType() + ""}, "不是学生token", userService))
+//                .addPathPatterns(studentIncludePathLists);
 
 //管理员拦截器
 //        List managerIncludePathLists = new ArrayList();
