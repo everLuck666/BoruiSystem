@@ -4,4 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.seehope.mapper.OrdersMapper">
 
+
+    <select id="getIncome" resultMap="orders">
+     select order_amout from orders where order_time between #{todays} and #{todaye}
+    </select>
+
+    <resultMap id="orders" type="net.seehope.pojo.Orders">
+        <result column="order_amout" property="orderAmout"></result>
+    </resultMap>
+
+
+    <select id="orderMinDate" resultType="date">
+        select min(order_time) from orders
+    </select>
+
+    <select id="orderMaxDate" resultType="date">
+        select max(order_time) from orders
+    </select>
+
 </mapper>

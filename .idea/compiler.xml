@@ -9,6 +9,7 @@
         <module name="BoruiSystem-pojo" />
         <module name="BoruiSystem-common" />
         <module name="BoruiSystem-controller" />
+        <module name="wxpay-sdk" />
         <module name="BoruiSystem-service" />
         <module name="BoruiSystem-generator" />
         <module name="BoruiSystem-configuration" />
@@ -23,6 +24,7 @@
       <module name="BoruiSystem-mapper" target="1.8" />
       <module name="BoruiSystem-pojo" target="1.8" />
       <module name="BoruiSystem-service" target="1.8" />
+      <module name="wxpay-sdk" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -34,6 +36,7 @@
       <module name="BoruiSystem-mapper" options="-parameters" />
       <module name="BoruiSystem-pojo" options="-parameters" />
       <module name="BoruiSystem-service" options="-parameters" />
+      <module name="wxpay-sdk" options="-parameters" />
     </option>
   </component>
 </project>

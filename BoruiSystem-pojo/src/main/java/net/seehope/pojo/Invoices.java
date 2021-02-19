@@ -37,7 +37,7 @@ public class Invoices implements Serializable {
      * 税号
      */
     @Column(name = "`tax_id`")
-    private Integer taxId;
+    private String taxId;
 
     private static final long serialVersionUID = 1L;
 
@@ -127,21 +127,11 @@ public class Invoices implements Serializable {
         this.accout = accout;
     }
 
-    /**
-     * 获取税号
-     *
-     * @return tax_id - 税号
-     */
-    public Integer getTaxId() {
+    public String getTaxId() {
         return taxId;
     }
 
-    /**
-     * 设置税号
-     *
-     * @param taxId 税号
-     */
-    public void setTaxId(Integer taxId) {
+    public void setTaxId(String taxId) {
         this.taxId = taxId;
     }
 }

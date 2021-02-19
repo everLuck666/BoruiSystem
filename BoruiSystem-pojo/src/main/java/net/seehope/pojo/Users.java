@@ -21,6 +21,43 @@ public class Users implements Serializable {
     @Column(name = "`address`")
     private String address;
 
+
+
+
+
+    @Column(name = "`password`")
+    private String password;
+
+    @Column(name = "`identity`")
+    private Integer identity;
+
+    @Column(name = "`version`")
+    private String version;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(Integer identity) {
+        this.identity = identity;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     /**
      * 是否订阅
      */

@@ -4,4 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.seehope.mapper.VideoMapper">
 
+
+    <select id="getAllVideo" resultType="net.seehope.pojo.Video">
+    select videoName,path,describeStatic,createTime from video where path like
+    "%.mp4" or path like "%.avi"
+</select>
+
+
+    <select id="getAllZip" resultType="net.seehope.pojo.Video">
+    select videoName,path,describeStatic,createTime from video where path like
+    "%.zip" or path like "%.zop"
+</select>
+
 </mapper>

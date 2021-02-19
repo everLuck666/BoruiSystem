@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/BoruiSystem-mapper/BoruiSystem-mapper.iml" filepath="$PROJECT_DIR$/BoruiSystem-mapper/BoruiSystem-mapper.iml" />
       <module fileurl="file://$PROJECT_DIR$/BoruiSystem-pojo/BoruiSystem-pojo.iml" filepath="$PROJECT_DIR$/BoruiSystem-pojo/BoruiSystem-pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/BoruiSystem-service/BoruiSystem-service.iml" filepath="$PROJECT_DIR$/BoruiSystem-service/BoruiSystem-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java_sdk_v3.0.9/wxpay-sdk.iml" filepath="$PROJECT_DIR$/java_sdk_v3.0.9/wxpay-sdk.iml" />
     </modules>
   </component>
 </project>

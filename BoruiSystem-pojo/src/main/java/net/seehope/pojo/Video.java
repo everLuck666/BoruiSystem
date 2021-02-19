@@ -1,37 +1,33 @@
 package net.seehope.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "`video`")
 public class Video implements Serializable {
     @Column(name = "`videoName`")
-    private String videoname;
+    private String videoName;
 
     @Column(name = "`path`")
     private String path;
 
-    @Column(name = "`describe`")
-    private String describe;
+    @Column(name = "`describeStatic`")
+    private String describestatic;
 
     @Column(name = "`createTime`")
-    private Date createtime;
+    private String createTime;
 
     private static final long serialVersionUID = 1L;
 
     /**
      * @return videoName
      */
-    public String getVideoname() {
-        return videoname;
+    public String getVideoName() {
+        return videoName;
     }
 
-    /**
-     * @param videoname
-     */
-    public void setVideoname(String videoname) {
-        this.videoname = videoname;
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
     }
 
     /**
@@ -49,30 +45,27 @@ public class Video implements Serializable {
     }
 
     /**
-     * @return describe
+     * @return describeStatic
      */
-    public String getDescribe() {
-        return describe;
+    public String getDescribestatic() {
+        return describestatic;
     }
 
     /**
-     * @param describe
+     * @param describestatic
      */
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setDescribestatic(String describestatic) {
+        this.describestatic = describestatic;
     }
 
     /**
      * @return createTime
      */
-    public Date getCreatetime() {
-        return createtime;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    /**
-     * @param createtime
-     */
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

@@ -3,7 +3,9 @@ package net.seehope.config;
 import net.seehope.UserService;
 import net.seehope.common.UserType;
 import net.seehope.filter.AllowOriginFilter;
+import net.seehope.filter.CountFilter;
 import net.seehope.interceptor.MyInterceptor;
+import net.seehope.mapper.CountPeopleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -15,23 +17,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    CountPeopleMapper countPeopleMapper;
+
     @Bean
-    public FilterRegistrationBean myFilter(){
+    public FilterRegistrationBean myFilter() {
         FilterRegistrationBean filterBean = new FilterRegistrationBean();
         AllowOriginFilter myFilter = new AllowOriginFilter();
+
+
         filterBean.setFilter(myFilter);
+
+        CountFilter countFilter = new CountFilter();
+        countFilter.setCountPeopleMapper(countPeopleMapper);
+        filterBean.setFilter(countFilter);
         ArrayList urls = new ArrayList();
         urls.add("/*");
         filterBean.setUrlPatterns(urls);
         Map map = new HashMap();
-        map.put("count","100");
+        map.put("count", "100");
         filterBean.setInitParameters(map);
+
+
         return filterBean;
     }
 
@@ -42,14 +56,14 @@ public class WebConfig extends WebMvcConfigurationSupport {
         //拦截教师
         List includePathLists = new ArrayList();
         includePathLists.add("/students/student");
-        registry.addInterceptor(new MyInterceptor(new String[]{UserType.TEACHER.getType()+""},"不是老师token",userService))
+        registry.addInterceptor(new MyInterceptor(new String[]{UserType.TEACHER.getType() + ""}, "不是老师token", userService))
                 .addPathPatterns(includePathLists);
 
 
         //拦截学生
         List studentIncludePathLists = new ArrayList();
         studentIncludePathLists.add("/choose/choose");
-        registry.addInterceptor(new MyInterceptor(new String[]{UserType.STUDENT.getType()+""},"不是学生token",userService))
+        registry.addInterceptor(new MyInterceptor(new String[]{UserType.STUDENT.getType() + ""}, "不是学生token", userService))
                 .addPathPatterns(studentIncludePathLists);
 
 //管理员拦截器
@@ -81,7 +95,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
 //        workIncludePathLists.add("/admin/getRecord");
 //        registry.addInterceptor(new MyInterceptor(new String[]{UserType.WORK.getType()+""},"不是员工token或者没有权限",userService))
 //                .addPathPatterns(workIncludePathLists);
-
 
 
     }

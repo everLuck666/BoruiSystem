@@ -24,7 +24,7 @@ net:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/teaching_system?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&autoReconnect=true
+    url: jdbc:mysql://localhost:3306/borui?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&autoReconnect=true
     username: test
     password: test
 
