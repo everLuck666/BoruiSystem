@@ -22,9 +22,9 @@ public interface UserService {
     void deleteUser(String userId);
 
     //存用户信息
-    void insertUser(Users user);
+    void insertUser(Users user,int identity);
 
-    Users login(Users user);
+    Users login(ManagerBo bo);
 
     //删除客户
     void deleteClient(String userId);

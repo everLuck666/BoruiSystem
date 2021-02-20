@@ -45,9 +45,6 @@ public interface OrdersService {
     //得到本月收入
     String getMonthSales();
 
-    //得到累计收入
-    String totalIncome();
-
 
     //得到今日收入
 

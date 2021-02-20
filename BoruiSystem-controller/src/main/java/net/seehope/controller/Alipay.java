@@ -4,11 +4,19 @@ import com.alipay.easysdk.factory.Factory.Payment;
 import com.alipay.easysdk.kernel.Config;
 import com.alipay.easysdk.kernel.util.ResponseChecker;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
+import com.github.wxpay.util.MatrixToImageWriter;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Hashtable;
 
 @RestController
 @RequestMapping("alipay")
@@ -17,7 +25,7 @@ public class Alipay {
     Logger logger = LoggerFactory.getLogger("alipay");
 
     @GetMapping("pay")
-    public  void alipay(){
+    public  void alipay(HttpServletResponse res){
         // 1. 设置参数（全局只需设置一次）
         Factory.setOptions(getOptions());
         try {
@@ -26,7 +34,18 @@ public class Alipay {
             // 3. 处理响应或异常
             if (ResponseChecker.success(response)) {
                 System.out.println("调用成功");
-                response.getQrCode();
+                String codeUrl = response.getQrCode();
+                int width = 300;
+                int height = 300;
+                //二维码的图片格式
+                String format = "JPEG";
+                Hashtable hints = new Hashtable();
+                //内容所使用编码
+                hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+                BitMatrix bitMatrix = new MultiFormatWriter().encode(codeUrl,
+                        BarcodeFormat.QR_CODE, width, height, hints);
+                // response.setContentType("image/JPEG");
+                MatrixToImageWriter.writeToStream(bitMatrix, format, res.getOutputStream());
                 logger.info(response.getQrCode());
             } else {
                 System.err.println("调用失败，原因：" + response.msg + "，" + response.subMsg);

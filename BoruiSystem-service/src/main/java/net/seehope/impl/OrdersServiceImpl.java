@@ -2,14 +2,24 @@ package net.seehope.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.seehope.IndexService;
 import net.seehope.OrdersService;
+import net.seehope.common.OrderType;
+import net.seehope.common.SendStatus;
+import net.seehope.common.UserType;
+import net.seehope.mapper.GoodsMapper;
 import net.seehope.mapper.InvoicesMapper;
 import net.seehope.mapper.OrdersMapper;
+import net.seehope.mapper.UsersMapper;
+import net.seehope.pojo.Goods;
 import net.seehope.pojo.Invoices;
 import net.seehope.pojo.Orders;
+import net.seehope.pojo.Users;
 import net.seehope.pojo.bo.GetOrdersBo;
 import net.seehope.pojo.bo.OrdersInfoBo;
+import net.seehope.pojo.bo.PayBo;
 import net.seehope.pojo.bo.TotalStatisticBo;
+import net.seehope.pojo.vo.OrderVo;
 import net.seehope.util.ExcelFormatUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.streaming.SXSSFCell;
@@ -21,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +39,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
@@ -122,6 +132,16 @@ public class OrdersServiceImpl implements OrdersService {
             e.printStackTrace();
             logger.error(">>>>>>>>>>导出excel 异常，原因为：" + e.getMessage());
         }
+        return null;
+    }
+
+    @Override
+    public String getTodaySales() {
+        return null;
+    }
+
+    @Override
+    public String getMonthSales() {
         return null;
     }
 
@@ -226,7 +246,6 @@ public class OrdersServiceImpl implements OrdersService {
         }
         return inputStream1;
     }
-}
 
 
 

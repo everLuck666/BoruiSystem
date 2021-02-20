@@ -1,12 +1,23 @@
 package net.seehope.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import net.seehope.UserService;
 import net.seehope.common.UserType;
 import net.seehope.exception.PassPortException;
 import net.seehope.mapper.UsersMapper;
 import net.seehope.pojo.Users;
 import net.seehope.pojo.bo.ManagerBo;
+import net.seehope.pojo.bo.UsersInfoBo;
+import net.seehope.util.ExcelFormatUtil;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,7 +48,7 @@ public class UserServiceImpl implements UserService {
         Users users = new Users();
         users.setUserId(sno);
         Users userValue = usersMapper.selectOne(users);
-        if(userValue != null){
+        if (userValue != null) {
             return userValue;
         }
         return null;
@@ -48,15 +59,15 @@ public class UserServiceImpl implements UserService {
         Users user = new Users();
         user.setUserId(userId);
 
-        if (isExist(user.getUserId())){
+        if (isExist(user.getUserId())) {
             Users userTemp = new Users();
             userTemp.setIdentity(UserType.SUPERMANAGER.getType());
             List list = usersMapper.select(userTemp);
-            if(list.size() == 1){
+            if (list.size() == 1) {
                 throw new RuntimeException("还剩一个管理员，禁止删除");
             }
             usersMapper.delete(user);
-        }else{
+        } else {
             throw new RuntimeException("账号不存在");
         }
 
@@ -64,64 +75,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void insertUser(Users user,int identity) {
-        if (isExist(user.getUserId())){
+    public void insertUser(Users user, int identity) {
+        if (isExist(user.getUserId())) {
             throw new RuntimeException("账号存在");
-        }else{
+        } else {
             user.setIdentity(identity);
             user.setVersion("0");
             usersMapper.insert(user);
 
-
+        }
     }
 
     @Override
     public Users login(ManagerBo bo) {
-        Users user = null;
-
-        if (!StringUtils.isEmpty(bo.getUsername())) {
-            Users temp = new Users();
-            temp.setUserId(bo.getUsername());
-            try{
-                user = usersMapper.selectOne(temp);
-            }catch (Exception e){
-                throw new RuntimeException("找到了两个用户");
-            }
-            if (user == null) {
-                throw new RuntimeException("用户不存在");
-            }
-            if (!StringUtils.equals(bo.getPassword(), user.getPassword())) {
-                throw new PassPortException("密码错误");
-            }
-        }
-
-        return user;
-    }
-
-    @Override
-    public boolean isExist(String userId) {
-        Users users = new Users();
-        users.setUserId(userId);
-
-        Users users1 =  usersMapper.selectOne(users);
-        if(users1 != null){
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public List<Users> getAllManagers() {
-        Users users = new Users();
-        users.setIdentity(UserType.SUPERMANAGER.getType());
-        return usersMapper.select(users);
-    }
-
-    @Override
-    public void updateVersion(String version,String userId) {
-        usersMapper.updateVersion(version,userId);
-
+        return null;
     }
 
     @Override
@@ -133,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo getClients(Integer page, Integer pageSize) {
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page, pageSize);
         List clients = usersMapper.queryUserInfos();
         PageInfo pageInfo = new PageInfo(clients);
         return pageInfo;
@@ -145,7 +112,7 @@ public class UserServiceImpl implements UserService {
             logger.info(">>>>>>>>>>开始导出excel>>>>>>>>>>");
 
 
-            List<UsersInfoBo> list=usersMapper.queryUserInfos();
+            List<UsersInfoBo> list = usersMapper.queryUserInfos();
 
             BaseFrontServiceImpl baseFrontController = new BaseFrontServiceImpl();
             return baseFrontController.buildResponseEntity(export(list), excelName + ".xlsx");
@@ -156,11 +123,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private InputStream export(List<UsersInfoBo> list) {
+    private InputStream export (List < UsersInfoBo > list) {
         logger.info(">>>>>>>>>>>>>>>>>>>>开始进入导出方法>>>>>>>>>>");
         Map<String, String> map = new HashMap();
-        map.put("0","否");
-        map.put("1","是");
+        map.put("0", "否");
+        map.put("1", "是");
         ByteArrayOutputStream output = null;
         InputStream inputStream1 = null;
         SXSSFWorkbook wb = new SXSSFWorkbook(1000);// 保留1000条数据在内存中
@@ -170,11 +137,11 @@ public class UserServiceImpl implements UserService {
         CellStyle content = ExcelFormatUtil.contentStyle(wb);// 报表体样式
 
         // 每一列字段名
-        String[] strs = new String[] { "订阅", "客户姓名", "联系方式", "邮箱", "收货地址",
+        String[] strs = new String[]{"订阅", "客户姓名", "联系方式", "邮箱", "收货地址",
                 "购买商品", "订单总额"};
 
         // 字段名所在表格的宽度
-        int[] ints = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000};
+        int[] ints = new int[]{5000, 5000, 5000, 5000, 5000, 5000, 5000};
 
         // 设置表头样式
         ExcelFormatUtil.initTitleEX(sheet, header, strs, ints);
@@ -238,5 +205,22 @@ public class UserServiceImpl implements UserService {
             }
         }
         return inputStream1;
+    }
+
+
+
+    @Override
+    public boolean isExist(String userId) {
+        return false;
+    }
+
+    @Override
+    public List<Users> getAllManagers() {
+        return null;
+    }
+
+    @Override
+    public void updateVersion(String version, String userId) {
+
     }
 }
