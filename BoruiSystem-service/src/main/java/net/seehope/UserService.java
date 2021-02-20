@@ -1,8 +1,15 @@
 package net.seehope;
 
+import com.github.pagehelper.PageInfo;
+import io.swagger.models.auth.In;
 import net.seehope.pojo.Users;
 import net.seehope.pojo.bo.ManagerBo;
 
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface UserService {
@@ -18,6 +25,15 @@ public interface UserService {
     void insertUser(Users user,int identity);
 
     Users login(ManagerBo bo);
+
+    //删除客户
+    void deleteClient(String userId);
+
+    //查询客户
+    PageInfo getClients(Integer page,Integer pageSize);
+
+    //导出客户Excel表
+    ResponseEntity<byte[]> exportClientExcel(HttpServletRequest request, HttpServletResponse response, String excelName);
 
     //判断用户存不存在
     boolean isExist(String userId);

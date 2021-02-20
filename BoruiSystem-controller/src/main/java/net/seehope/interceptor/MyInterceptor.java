@@ -1,21 +1,9 @@
 package net.seehope.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import net.seehope.UserService;
-import net.seehope.jwt.JWTUtils;
-import net.seehope.pojo.Users;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 
 public class MyInterceptor implements HandlerInterceptor {
 
