@@ -13,7 +13,7 @@ public class Goods implements Serializable {
     private String describe;
 
     @Column(name = "`product_price`")
-    private Double productPrice;
+    private String productPrice;
 
     @Column(name = "`image_url`")
     private String imageUrl;
@@ -54,14 +54,11 @@ public class Goods implements Serializable {
     /**
      * @return product_price
      */
-    public Double getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 
-    /**
-     * @param productPrice
-     */
-    public void setProductPrice(Double productPrice) {
+    public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
     }
 

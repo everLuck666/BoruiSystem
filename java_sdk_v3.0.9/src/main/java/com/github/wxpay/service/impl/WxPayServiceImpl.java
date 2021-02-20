@@ -85,7 +85,7 @@ public class WxPayServiceImpl implements WxPayService {
 
 
     @Override
-    public void doWx(HttpServletRequest request, HttpServletResponse response, String ipAddress) throws Exception {
+    public void doWx(HttpServletRequest request, HttpServletResponse response, String ipAddress,int totalPrice,String orderId,String body) throws Exception {
         String number = request.getParameter("number") == null ? "" : request.getParameter("number");
         // Productorder p = productorderService.findUniqueByProperty("number", number);
         Date date = new Date();
@@ -97,12 +97,12 @@ public class WxPayServiceImpl implements WxPayService {
         String timeExpire = sdf.format(date1);
         SortedMap<String, String> parameters = new TreeMap<String, String>();
         parameters.put("appid", WechatConstant.APPID);
-        parameters.put("body", "12");
+        parameters.put("body", body);
         parameters.put("mch_id", WechatConstant.MCH_ID);
-        parameters.put("out_trade_no", "123");
+        parameters.put("out_trade_no", orderId);
         parameters.put("spbill_create_ip", ipAddress);
         DecimalFormat df = new DecimalFormat("#");
-        parameters.put("total_fee","1");
+        parameters.put("total_fee",String.valueOf(totalPrice));
         parameters.put("trade_type", "NATIVE");
      //   parameters.put("out_trade_no","123");
        // parameters.put("time_expire", CommonUtil.getOrderExpireTime(startData,5*60*1000L));//二维码过期时间5分钟

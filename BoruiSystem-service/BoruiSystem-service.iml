@@ -22,6 +22,9 @@
     <orderEntry type="module" module-name="BoruiSystem-mapper" />
     <orderEntry type="module" module-name="BoruiSystem-pojo" />
     <orderEntry type="module" module-name="BoruiSystem-common" />
+    <orderEntry type="module" module-name="BoruiSystem-mapper" />
+    <orderEntry type="module" module-name="BoruiSystem-pojo" />
+    <orderEntry type="module" module-name="BoruiSystem-common" />
     <orderEntry type="library" name="Maven: tk.mybatis:mapper:4.1.5" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.20" level="project" />

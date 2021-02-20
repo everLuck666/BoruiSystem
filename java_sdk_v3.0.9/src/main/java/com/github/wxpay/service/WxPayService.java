@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface WxPayService {
     public Map<String,String>wxPay(String openId, String ipAddress) throws Exception;
-    void doWx(HttpServletRequest request, HttpServletResponse response, String ipAddress) throws Exception;
+    void doWx(HttpServletRequest request, HttpServletResponse response, String ipAddress,int totalPrice,String orderId,String body) throws Exception;
 }

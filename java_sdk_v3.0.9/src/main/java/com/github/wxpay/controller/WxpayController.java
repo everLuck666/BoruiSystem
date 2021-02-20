@@ -88,7 +88,10 @@ public class WxpayController {
         }
         payBo.setProductList(map);
 
-        ordersService.pretreatment(payBo);
+        String[] message = ordersService.pretreatment(payBo);
+        String orderId = message[0];
+        int totalPrice = Integer.parseInt(message[1]);
+
 
 
 
@@ -111,7 +114,7 @@ public class WxpayController {
             ip = ips[0].trim();
         }
        // return wxPayService.wxPay(userId,ip);
-        // wxPayService.doWx(request,response,ip);
+         wxPayService.doWx(request,response,ip,totalPrice,orderId,"body");
         return null;
     }
 

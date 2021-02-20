@@ -48,7 +48,7 @@ public class OrdersServiceImpl implements OrdersService {
         for(Orders orders:ordersList){
             System.out.println(orders.getOrderAmout());
 
-            sum += orders.getOrderAmout();
+            sum += Integer.parseInt(orders.getOrderAmout());
         }
 
         return sum+"";
@@ -85,7 +85,7 @@ public class OrdersServiceImpl implements OrdersService {
         for(Orders orders:ordersList){
             System.out.println(orders.getOrderAmout());
 
-            sum += orders.getOrderAmout();
+            sum += Integer.parseInt(orders.getOrderAmout());
         }
         return sum +"";
     }
@@ -97,7 +97,7 @@ public class OrdersServiceImpl implements OrdersService {
         for(Orders orders:ordersList){
             System.out.println(orders.getOrderAmout());
 
-            sum += orders.getOrderAmout();
+            sum += Integer.parseInt(orders.getOrderAmout());
         }
         return sum + "";
     }
@@ -167,7 +167,7 @@ public class OrdersServiceImpl implements OrdersService {
         for(Orders orders:ordersList){
             System.out.println(orders.getOrderAmout());
 
-            sum += orders.getOrderAmout();
+            sum += Integer.parseInt(orders.getOrderAmout());
         }
 
         return sum+"";
@@ -177,7 +177,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     @Transactional
-    public void pretreatment(PayBo payBo) {
+    public String[] pretreatment(PayBo payBo) {
         Map<String,String> productMap = payBo.getProductList();
         Iterator<Map.Entry<String,String>> iterator = productMap.entrySet().iterator();
         Users users = new Users();
@@ -197,7 +197,8 @@ public class OrdersServiceImpl implements OrdersService {
             users.setPassword(payBo.getPhone());
             usersMapper.insert(users);
 
-       String orderId = UUID.randomUUID().toString();
+       String orderId = UUID.randomUUID().toString().replace("-","");
+       int totalPrice = 0;
 
         while (iterator.hasNext()){
 
@@ -208,7 +209,10 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setOrderId(orderId);
             orders.setProductName(productId);
             orders.setProductNumber(num);
-            orders.setOrderAmout(getPrice(productId,num));
+            int priceTemp = getPrice(productId,num);
+            totalPrice += priceTemp;
+
+            orders.setOrderAmout(priceTemp+"");
             orders.setInvoiceType(payBo.getInvoiceTitle());//发票类型
             orders.setRemark(payBo.getNote());//客户的备注
             orders.setStatus(SendStatus.UNSEND.getStatus()+"");//发货未发货
@@ -232,6 +236,9 @@ public class OrdersServiceImpl implements OrdersService {
             }
 
         }
+        String[] message = new String[]{orderId,totalPrice+""};
+
+        return message;
 
 
 
@@ -239,14 +246,14 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Double getPrice(String goodName, String num) {
+    public int getPrice(String goodName, String num) {
         Goods goods = new Goods();
         goods.setProductName(goodName);
         Goods goodsValue = goodsMapper.selectOne(goods);
         if(goodsValue == null){
             throw new RuntimeException("这个商品不存在");
         }
-        double price = goodsValue.getProductPrice()*Integer.parseInt(num);
+        int price = Integer.parseInt(goodsValue.getProductPrice())*Integer.parseInt(num);
         return price;
     }
 }

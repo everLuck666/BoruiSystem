@@ -24,8 +24,8 @@ public interface OrdersService {
 
     //得到这一天的收入
     String getTodayIncome(Date date);
-//形成预处理订单
-    void pretreatment(PayBo payBo);
+//形成预处理订单,返回需要付钱的金额
+    String[] pretreatment(PayBo payBo);
     //返回根据商品和商品的数量返回价格
-    Double getPrice(String goodName,String num);
+    int getPrice(String goodName,String num);
 }

@@ -25,6 +25,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="BoruiSystem-configuration" />
+    <orderEntry type="module" module-name="BoruiSystem-service" />
+    <orderEntry type="module" module-name="BoruiSystem-mapper" />
+    <orderEntry type="module" module-name="BoruiSystem-pojo" />
+    <orderEntry type="module" module-name="BoruiSystem-common" />
     <orderEntry type="module" module-name="wxpay-sdk" />
     <orderEntry type="module" module-name="BoruiSystem-configuration" />
     <orderEntry type="library" name="Maven: com.thetransactioncompany:cors-filter:2.5" level="project" />

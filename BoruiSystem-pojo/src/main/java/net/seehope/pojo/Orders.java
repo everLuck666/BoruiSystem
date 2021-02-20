@@ -20,7 +20,7 @@ public class Orders implements Serializable {
     private String productNumber;
 
     @Column(name = "`order_amout`")
-    private Double orderAmout;
+    private String orderAmout;
 
     @Column(name = "`order_time`")
     private Date orderTime;
@@ -113,14 +113,11 @@ public class Orders implements Serializable {
     /**
      * @return order_amout
      */
-    public Double getOrderAmout() {
+    public String getOrderAmout() {
         return orderAmout;
     }
 
-    /**
-     * @param orderAmout
-     */
-    public void setOrderAmout(Double orderAmout) {
+    public void setOrderAmout(String orderAmout) {
         this.orderAmout = orderAmout;
     }
 
