@@ -16,7 +16,7 @@
         select * from orders_info
     </select>
 
-    <select id="queryOrdersBy" parameterType="String" resultMap="orders">
+    <select id="queryOrdersBy" parameterType="String" resultMap="orders2">
         select * from orders_info
         <where>
             <if test="status !=null and status !=''">
@@ -28,7 +28,7 @@
         </where>
     </select>
 
-    <resultMap id="orders" type="net.seehope.pojo.bo.OrdersInfoBo">
+    <resultMap id="orders2" type="net.seehope.pojo.bo.OrdersInfoBo">
         <result column="order_id" property="orderId"></result>
         <result column="product_name" property="productName"></result>
         <result column="product_number" property="productNumber"></result>

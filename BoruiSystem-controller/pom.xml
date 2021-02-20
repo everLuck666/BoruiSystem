@@ -135,6 +135,14 @@
             <artifactId>jetty-util</artifactId>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-easysdk</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+
     </dependencies>
 
 
