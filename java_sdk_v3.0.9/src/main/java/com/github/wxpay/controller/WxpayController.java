@@ -11,6 +11,7 @@ import com.github.wxpay.service.WxPayService;
 import com.github.wxpay.vo.WxPayNotifyVO;
 import net.seehope.OrdersService;
 import net.seehope.SmsSendService;
+import net.seehope.common.RestfulJson;
 import net.seehope.jwt.JWTUtils;
 
 import net.seehope.pojo.bo.PayBo;
@@ -53,9 +54,9 @@ public class WxpayController {
 
 
 
-    @GetMapping(value = "/pay",produces="application/json;charset=UTF-8")
+    @PostMapping(value = "/pay",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public Map<String, String> pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
+    public RestfulJson pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
         System.out.println("我进来了");
        // System.out.println("token是"+token);
         //itemService.isCanBug(userOrderInformationBo.getSpecies());//判断门票是否可以买
@@ -95,7 +96,7 @@ public class WxpayController {
         Map<String,String> map = new HashMap<>();
         for (int i = 0;i<jsonArray.size();i++){
             JSONObject object = jsonArray.getJSONObject(i);
-            String pno  = object.getString("pno");
+            String pno  = object.getString("item");
             String number = object.getString("num");
             map.put(pno,number);
             body.append(pno);
