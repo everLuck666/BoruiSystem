@@ -24,8 +24,19 @@ public class CountServiceImpl implements CountService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         countPeople.setTime(simpleDateFormat.format(date));
 
-        List<CountPeople> countPeopleList = countPeopleMapper.select(countPeople);
-        return countPeopleList.size();
+        CountPeople countPeopleValue = countPeopleMapper.selectOne(countPeople);
+        if(countPeopleValue != null){
+            String num = countPeopleValue.getCount();
+            if(num != null){
+                return Integer.parseInt(num);
+            }else {
+                return 0;
+            }
+        }else {
+            return 0;
+        }
+
+
     }
 
     @Override

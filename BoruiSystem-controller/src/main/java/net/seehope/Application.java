@@ -20,6 +20,7 @@ import java.util.Timer;
 @EnableScheduling
 @EnableAsync
 @ServletComponentScan
+@EnableSwagger2
 @ComponentScan({"net.seehope","com.github.wxpay"})
 public class Application{
     public static void main(String[] args) throws Exception {

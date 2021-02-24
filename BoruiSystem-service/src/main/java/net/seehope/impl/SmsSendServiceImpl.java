@@ -102,13 +102,13 @@ public class SmsSendServiceImpl implements SmsSendService {
 
     @Override
     public void sendAllPeople(String message) {
-        List<Users> usersList = usersMapper.selectAll();
+        List<String> usersList = usersMapper.getAllPeoplePhone("");
 
         SmsBo smsBo = new SmsBo();
 
-        for(Users users:usersList){
+        for(String phone:usersList){
             smsBo.setMessage(message);
-            smsBo.setMobile(users.getPhone());
+            smsBo.setMobile(phone);
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
             sendMessage(smsBo);
@@ -119,15 +119,14 @@ public class SmsSendServiceImpl implements SmsSendService {
 
     @Override
     public void sendPeopel(String message) {
-        Users users = new Users();
-        users.setSubscribeStatus("1");
-        List<Users> usersList = usersMapper.select(users);
+
+        List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
 
         SmsBo smsBo = new SmsBo();
 
-        for(Users user:usersList){
+        for(String phone:usersList){
             smsBo.setMessage(message);
-            smsBo.setMobile(user.getPhone());
+            smsBo.setMobile(phone);
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
             sendMessage(smsBo);

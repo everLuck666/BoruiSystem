@@ -77,7 +77,7 @@ public class OrdersController {
 
     //得到今天收入
     @ApiOperation(value = "得到今天收入",produces="application/json;charset=UTF-8")
-    @GetMapping("income")
+    @GetMapping(value = "income",produces="application/json;charset=UTF-8")
     public RestfulJson getTodayIncome(){
 
         return RestfulJson.isOk(ordersService.getTodayIncome());

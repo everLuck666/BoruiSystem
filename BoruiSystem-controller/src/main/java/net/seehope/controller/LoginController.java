@@ -85,7 +85,7 @@ public class LoginController {
 
     @ApiOperation("管理员登录获取token")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名", dataType = "String"),
+            @ApiImplicitParam(name = "username", value = "用户账号", dataType = "String"),
             @ApiImplicitParam(name = "password", value = "密码", dataType = "String")
     })
     @Transactional

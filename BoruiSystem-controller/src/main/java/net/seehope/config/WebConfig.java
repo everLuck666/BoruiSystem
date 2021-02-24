@@ -11,8 +11,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,23 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         return filterBean;
     }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        //将所有/static/** 访问都映射到classpath:/static/ 目录下
+        // registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+
+        File file = new File("BoruiSystem-controller");
+        registry.addResourceHandler("/static/**").addResourceLocations("file:"+file.getAbsolutePath()+"/src/main/resources/static/");
+
+
+
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -1,36 +1,34 @@
-package net.seehope.controller;
+package com.github.wxpay.service.impl;
+
 import com.alipay.easysdk.factory.Factory;
-import com.alipay.easysdk.factory.Factory.Payment;
 import com.alipay.easysdk.kernel.Config;
 import com.alipay.easysdk.kernel.util.ResponseChecker;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
+import com.github.wxpay.constant.WechatConstant;
+import com.github.wxpay.service.AlipayService;
 import com.github.wxpay.util.MatrixToImageWriter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
+import net.seehope.pojo.bo.WeChatPayBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Hashtable;
-
-@RestController
-@RequestMapping("alipay")
-public class Alipay {
-
+@Service
+public class AlipayServiceImpl implements AlipayService {
     Logger logger = LoggerFactory.getLogger("alipay");
-
-    @GetMapping("pay")
-    public  void alipay(HttpServletResponse res){
+    @Override
+    public  void alipay(HttpServletResponse res, WeChatPayBo weChatPayBo){
         // 1. 设置参数（全局只需设置一次）
         Factory.setOptions(getOptions());
         try {
+            double price = weChatPayBo.getTotalPrice()/100.0;
             // 2. 发起API调用（以创建当面付收款二维码为例）
-            AlipayTradePrecreateResponse response = Payment.FaceToFace().preCreate("Apple iPhone11 128G", "2238867890", "0.01");
+            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace().preCreate(weChatPayBo.getProductNames(), weChatPayBo.getOrderId(), price+"");
             // 3. 处理响应或异常
             if (ResponseChecker.success(response)) {
                 System.out.println("调用成功");
@@ -71,14 +69,16 @@ public class Alipay {
 
 
         //注：如果采用非证书模式，则无需赋值上面的三个证书路径，改为赋值如下的支付宝公钥字符串即可
-         config.alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArfd2HmjRDUjQLwYPp62kVi7wAoYViHCyurtNN5kd5vyEKvdATdz6JX5M5hUszacQVo7sydLWap1z0hyhg7qBU2qxfGS8Ge6/cX09RivT4WXRfC+0R7EFoNCUoKtwpAgrb5WWlG39v2wS9owTrntZCOgUS6FE8wLGiSJ/9hP3v9XuMbhEO+pRl6r4N+d9B9k2vmxuanNSnPv+3PjQQ8S5OM9S0bt5wMKH23QOnbKZQkgcljuQHephuI1p+OG2iAdH1Ku+Ub8221mP/5TIyPwgrzQGLefJCSgYkdWrRH6WjNSj7IGqP9CLM4G+vlEdlhJa6JmCCyUc6Vb09g9BvTwj+QIDAQAB";
+        config.alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArfd2HmjRDUjQLwYPp62kVi7wAoYViHCyurtNN5kd5vyEKvdATdz6JX5M5hUszacQVo7sydLWap1z0hyhg7qBU2qxfGS8Ge6/cX09RivT4WXRfC+0R7EFoNCUoKtwpAgrb5WWlG39v2wS9owTrntZCOgUS6FE8wLGiSJ/9hP3v9XuMbhEO+pRl6r4N+d9B9k2vmxuanNSnPv+3PjQQ8S5OM9S0bt5wMKH23QOnbKZQkgcljuQHephuI1p+OG2iAdH1Ku+Ub8221mP/5TIyPwgrzQGLefJCSgYkdWrRH6WjNSj7IGqP9CLM4G+vlEdlhJa6JmCCyUc6Vb09g9BvTwj+QIDAQAB";
 
         //可设置异步通知接收服务地址（可选）
 //        config.notifyUrl = "<-- 请填写您的支付类接口异步通知接收服务地址，例如：https://www.test.com/callback -->";
-        config.notifyUrl = "https://blog.52itstyle.vip/callback";
+        config.notifyUrl = WechatConstant.SUCCESS_NOTIFY;
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
         config.encryptKey = "<-- 请填写您的AES密钥，例如：aa4BtZ4tspm2wnXLb1ThQA== -->";
 
         return config;
     }
 }
+
+

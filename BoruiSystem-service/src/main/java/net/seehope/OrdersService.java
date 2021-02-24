@@ -67,4 +67,10 @@ public interface OrdersService {
     String[] pretreatment(PayBo payBo);
     //返回根据商品和商品的数量返回价格
     int getPrice(String goodName,String num);
+
+    //把预处理生成的订单改成已经支付完成的状态
+    void finishOrder(String orderId);
+
+    //判断订单是否已经完成了支付状态
+    boolean isOrderFinish(String orderId);
 }

@@ -20,12 +20,12 @@ public class UsersController {
     @Autowired
     UserService userService;
 
-    @GetMapping("clients")
+    @GetMapping(value = "clients",produces="application/json;charset=UTF-8")
     public RestfulJson getAllClients(Integer page,Integer pageSize){
         return RestfulJson.isOk(userService.getClients(page,pageSize));
     }
 
-    @DeleteMapping("clients")
+    @DeleteMapping(value = "clients",produces="application/json;charset=UTF-8")
     public RestfulJson deleteClients(String userId){
         userService.deleteClient(userId);
         return RestfulJson.isOk("删除客户成功");

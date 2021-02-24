@@ -22,5 +22,16 @@
     update  users set version = #{version} where user_id = #{userId}
     </update>
 
+    <select id="getAllPeoplePhone" resultType="string">
+        select distinct phone from users
+        <where>
+            <if test="subscribe != null and subscribe !=''" >
+            and subscribe_status = #{subscribe}
+            </if>
+        </where>
+    </select>
+
+
+
 
 </mapper>

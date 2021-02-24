@@ -6,12 +6,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.wxpay.bo.UserOrderInformationBo;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.github.wxpay.service.AlipayService;
 import com.github.wxpay.service.WxPayService;
 import com.github.wxpay.vo.WxPayNotifyVO;
 import net.seehope.OrdersService;
+import net.seehope.SmsSendService;
 import net.seehope.jwt.JWTUtils;
 
 import net.seehope.pojo.bo.PayBo;
+import net.seehope.pojo.bo.WeChatPayBo;
+import net.seehope.util.SmsUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,6 +46,10 @@ public class WxpayController {
     WxPayService wxPayService;
     @Autowired
     OrdersService ordersService;
+    @Autowired
+    SmsSendService smsSendService;
+    @Autowired
+    AlipayService alipayService;
 
 
 
@@ -73,18 +81,29 @@ public class WxpayController {
         payBo.setInvoiceType(jsonObject.getString("invoiceType"));
         payBo.setNote(jsonObject.getString("remark"));//备注
 
+        String payType = jsonObject.getString("payType");
+
 
 
 
 
 
         JSONArray jsonArray = jsonObject.getJSONArray("product");
+        StringBuffer stringBuffer = new StringBuffer();
+        StringBuffer body = new StringBuffer();
+
         Map<String,String> map = new HashMap<>();
         for (int i = 0;i<jsonArray.size();i++){
             JSONObject object = jsonArray.getJSONObject(i);
             String pno  = object.getString("pno");
             String number = object.getString("num");
             map.put(pno,number);
+            body.append(pno);
+            body.append("*");
+            body.append(number);
+            body.append("~");
+            stringBuffer.append(pno);
+            stringBuffer.append("~");
         }
         payBo.setProductList(map);
 
@@ -114,7 +133,21 @@ public class WxpayController {
             ip = ips[0].trim();
         }
        // return wxPayService.wxPay(userId,ip);
-         wxPayService.doWx(request,response,ip,totalPrice,orderId,"body");
+        WeChatPayBo weChatPayBo = new WeChatPayBo();
+        weChatPayBo.setBody(body.toString().substring(0,body.length()-1));
+        weChatPayBo.setIpAddress(ip);
+        weChatPayBo.setOrderId(orderId);
+        weChatPayBo.setPhone(payBo.getPhone());
+        weChatPayBo.setTotalPrice(totalPrice);
+        System.out.println(stringBuffer.toString().substring(0,stringBuffer.length()-1));
+        weChatPayBo.setProductNames(stringBuffer.toString().substring(0,stringBuffer.length()-1));
+        if(payType.equals("微信")){
+            wxPayService.doWx(request,response,weChatPayBo);
+        }else{
+           alipayService.alipay(response,weChatPayBo);
+        }
+
+
         return null;
     }
 
@@ -124,19 +157,23 @@ public class WxpayController {
         Map<String, String> result = new HashMap<String, String>();
         System.out.println("开始下单了");
         if ("SUCCESS".equals(param.getReturn_code())) {
-//            result.put("return_code", "SUCCESS");
-//            result.put("return_msg", "OK");
-//            OrdersBo bo = new OrdersBo();
-//            bo.setUserId(param.getOpenid());
-//            bo.setOrderId(param.getTransaction_id());
-//            System.out.println("attach:"+param.getAttach());
-//            String[] attach = param.getAttach().split("#");
-//            bo.setTicketNum(attach[1]);
-//            bo.setSpecies(attach[0]);
-//            bo.setTotal_fee(param.getTotal_fee());
-//            System.out.println(bo.getImagePath());
-//            System.out.println();
-//            synchronizedService.addOrder(bo,bo.getUserId());
+
+
+            result.put("return_code", "SUCCESS");
+            result.put("return_msg", "OK");
+
+
+            System.out.println("attach:"+param.getAttach());
+           String[] params = param.getAttach().split("#");
+           String orderId = params[0];
+           String phone = params[1];
+           String productNames = params[2];
+            if(!ordersService.isOrderFinish(orderId)){
+               String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
+                System.out.println("message"+message);
+                smsSendService.sendSuccess(message,phone);
+                ordersService.finishOrder(orderId);
+            }
 
         }
         return WXPayUtil.mapToXml(result);

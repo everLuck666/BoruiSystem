@@ -32,7 +32,7 @@ public class SmsController {
     @Autowired
     SmsSendService smsSendService;
 
-    @PostMapping("/sms" )
+    @PostMapping(value = "/sms" ,produces="application/json;charset=UTF-8")
     @ApiOperation("发送新产品短信")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "message", value = "要发送的短信信息", dataType = "String"),
@@ -52,7 +52,7 @@ public class SmsController {
 
     }
 
-    @RequestMapping("/sms2" )
+    @RequestMapping(value = "/sms2",produces="application/json;charset=UTF-8")
     @ApiOperation("发送快递接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "deliveryId", value = "快递单号", dataType = "String"),
@@ -71,8 +71,8 @@ public class SmsController {
         smsSendService.sendFlow(message,phone);
         return RestfulJson.isOk("发送成功");
     }
-    @RequestMapping("/sms3" )
-    public RestfulJson sendSuccessfulProduct() throws NoSuchAlgorithmException {
-        return RestfulJson.isOk("发送成功");
-    }
+//    @RequestMapping("/sms3" )
+//    public RestfulJson sendSuccessfulProduct() throws NoSuchAlgorithmException {
+//        return RestfulJson.isOk("发送成功");
+//    }
 }

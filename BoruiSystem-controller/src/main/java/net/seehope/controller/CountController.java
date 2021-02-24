@@ -14,21 +14,21 @@ import java.util.Date;
 public class CountController {
     @Autowired
     CountService countService;
-    @GetMapping("today")
+    @GetMapping(value = "today",produces="application/json;charset=UTF-8")
     public RestfulJson getTodayPeople(){
         Date date = new Date();
      return RestfulJson.isOk(countService.getTodayPeople(date));
     }
 
-    @GetMapping("all")
+    @GetMapping(value = "all",produces="application/json;charset=UTF-8")
     public RestfulJson getAllPeople(){
         return RestfulJson.isOk(countService.getAllPeople());
     }
-    @GetMapping("count")
+    @GetMapping(value = "count",produces="application/json;charset=UTF-8")
     public RestfulJson count(){
         return RestfulJson.isOk("计数中");
     }
-    @GetMapping("allCount")
+    @GetMapping(value = "allCount",produces="application/json;charset=UTF-8")
     public RestfulJson getAllCount(){
         return RestfulJson.isOk(countService.getAllCountList());
 

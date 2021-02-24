@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.seehope.IndexService;
 import net.seehope.OrdersService;
+import net.seehope.common.GoodsStatus;
 import net.seehope.common.OrderType;
 import net.seehope.common.SendStatus;
 import net.seehope.common.UserType;
@@ -21,6 +22,7 @@ import net.seehope.pojo.bo.PayBo;
 import net.seehope.pojo.bo.TotalStatisticBo;
 import net.seehope.pojo.vo.OrderVo;
 import net.seehope.util.ExcelFormatUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
@@ -465,7 +467,38 @@ public class OrdersServiceImpl implements OrdersService {
         if(goodsValue == null){
             throw new RuntimeException("这个商品不存在");
         }
+        if(StringUtils.equals(goodsValue.getStatus(), GoodsStatus.OFF.getStatus()+"")){
+            throw new RuntimeException("这个商品已经下架");
+        }
         int price = Integer.parseInt(goodsValue.getProductPrice())*Integer.parseInt(num);
         return price;
+    }
+
+    @Override
+    @Transactional
+    public void finishOrder(String orderId) {
+        Orders orders = new Orders();
+        orders.setOrderId(orderId);
+
+        List<Orders> ordersList = ordersMapper.select(orders);
+        for(Orders order:ordersList){
+            ordersMapper.delete(order);
+            order.setOrderStatus(OrderType.FINISH.getType()+"");
+            ordersMapper.insert(order);
+
+        }
+    }
+
+    @Override
+    public boolean isOrderFinish(String orderId) {
+        Orders orders = new Orders();
+        orders.setOrderId(orderId);
+        List<Orders> ordersList = ordersMapper.select(orders);
+        for(Orders order:ordersList){
+            if(StringUtils.equals(order.getOrderStatus(),OrderType.FINISH.getType()+"")){
+                return true;
+            }
+        }
+        return false;
     }
 }

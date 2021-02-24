@@ -11,6 +11,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import lombok.extern.slf4j.Slf4j;
+import net.seehope.pojo.bo.WeChatPayBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +86,7 @@ public class WxPayServiceImpl implements WxPayService {
 
 
     @Override
-    public void doWx(HttpServletRequest request, HttpServletResponse response, String ipAddress,int totalPrice,String orderId,String body) throws Exception {
+    public void doWx(HttpServletRequest request, HttpServletResponse response, WeChatPayBo weChatPayBo) throws Exception {
         String number = request.getParameter("number") == null ? "" : request.getParameter("number");
         // Productorder p = productorderService.findUniqueByProperty("number", number);
         Date date = new Date();
@@ -97,17 +98,18 @@ public class WxPayServiceImpl implements WxPayService {
         String timeExpire = sdf.format(date1);
         SortedMap<String, String> parameters = new TreeMap<String, String>();
         parameters.put("appid", WechatConstant.APPID);
-        parameters.put("body", body);
+        parameters.put("body", weChatPayBo.getBody());
+        parameters.put("attach",weChatPayBo.getOrderId()+"#"+weChatPayBo.getPhone()+"#"+weChatPayBo.getProductNames());
         parameters.put("mch_id", WechatConstant.MCH_ID);
-        parameters.put("out_trade_no", orderId);
-        parameters.put("spbill_create_ip", ipAddress);
+        parameters.put("out_trade_no", weChatPayBo.getOrderId());
+        parameters.put("spbill_create_ip", weChatPayBo.getIpAddress());
         DecimalFormat df = new DecimalFormat("#");
-        parameters.put("total_fee",String.valueOf(totalPrice));
+        parameters.put("total_fee",String.valueOf(weChatPayBo.getTotalPrice()));
         parameters.put("trade_type", "NATIVE");
      //   parameters.put("out_trade_no","123");
        // parameters.put("time_expire", CommonUtil.getOrderExpireTime(startData,5*60*1000L));//二维码过期时间5分钟
         parameters.put("nonce_str", WXPayUtil.generateNonceStr());
-        parameters.put("notify_url", "www.baidu.com");//支付成功后回调的action，与JSAPI相同
+        parameters.put("notify_url", WechatConstant.SUCCESS_NOTIFY);//支付成功后回调的action，与JSAPI相同
         String generateSignature = WXPayUtil.generateSignature(parameters, WechatConstant.MCH_KEY, WXPayConstants.SignType.MD5);
         parameters.put("sign", generateSignature);
         String generateSignedXml = WXPayUtil.generateSignedXml(parameters, WechatConstant.MCH_KEY);

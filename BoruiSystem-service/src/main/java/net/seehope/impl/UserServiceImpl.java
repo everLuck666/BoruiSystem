@@ -88,7 +88,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users login(ManagerBo bo) {
-        return null;
+        Users user = null;
+
+        if (!StringUtils.isEmpty(bo.getUsername())) {
+            Users temp = new Users();
+            temp.setUserId(bo.getUsername());
+            try{
+                user = usersMapper.selectOne(temp);
+            }catch (Exception e){
+                throw new RuntimeException("找到了两个用户");
+            }
+            if (user == null) {
+                throw new RuntimeException("用户不存在");
+            }
+            if (!StringUtils.equals(bo.getPassword(), user.getPassword())) {
+                throw new PassPortException("密码错误");
+            }
+        }
+
+        return user;
     }
 
     @Override
@@ -211,16 +229,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isExist(String userId) {
+        Users users = new Users();
+        users.setUserId(userId);
+
+        Users users1 =  usersMapper.selectOne(users);
+        if(users1 != null){
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public List<Users> getAllManagers() {
-        return null;
+        Users users = new Users();
+        users.setIdentity(UserType.SUPERMANAGER.getType());
+        return usersMapper.select(users);
     }
 
     @Override
-    public void updateVersion(String version, String userId) {
+    public void updateVersion(String version,String userId) {
+        usersMapper.updateVersion(version,userId);
 
     }
 }

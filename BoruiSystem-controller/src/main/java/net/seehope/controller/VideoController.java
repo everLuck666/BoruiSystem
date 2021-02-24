@@ -112,12 +112,6 @@ public class VideoController {
     public RestfulJson deleteVideo(@RequestBody Map map){
         String videoName = map.get("videoName").toString();
         videoService.deleteVideo(videoName);
-
-
-
-
-
-
         return RestfulJson.isOk("删除成功");
     }
 
