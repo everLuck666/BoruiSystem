@@ -11,7 +11,6 @@ import com.github.wxpay.service.WxPayService;
 import com.github.wxpay.vo.WxPayNotifyVO;
 import net.seehope.OrdersService;
 import net.seehope.SmsSendService;
-import net.seehope.common.RestfulJson;
 import net.seehope.jwt.JWTUtils;
 
 import net.seehope.pojo.bo.PayBo;
@@ -179,6 +178,39 @@ public class WxpayController {
         }
         return WXPayUtil.mapToXml(result);
     }
+
+
+    /**支付宝回调接口*/
+    /**不返回success，支付宝会在25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）才会结束通知发送。*/
+    @RequestMapping(value = "alinotify")
+    public String aliNotify(HttpServletRequest request) throws Exception {
+        try {
+            log.info("进入支付宝回调地址");
+            Map<String, String> params = new HashMap<>();
+            Map<String, String[]> requestParams = request.getParameterMap();
+            log.info("支付宝验签参数：{}", JSON.toJSONString(requestParams));
+            for (String name : requestParams.keySet()) {
+                String[] values = requestParams.get(name);
+                String valueStr = "";
+                for (int i = 0; i < values.length; i++) {
+                    valueStr = (i == values.length - 1) ? valueStr + values[i]
+                            : valueStr + values[i] + ",";
+                }
+                params.put(name, valueStr);
+            }
+            boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
+            if (flag) {
+                alipayService.aliNotify(params);
+                log.info("支付宝通知更改状态成功！");
+                return "success";
+            }
+        } catch (Throwable e) {
+            log.error("exception: ", e);
+        }
+        return "failure";
+    }
+
+
 
     @RequestMapping("xiao")
     public void sss(){

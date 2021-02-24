@@ -16,8 +16,15 @@
         <module name="BoruiSystem-configuration" />
         <module name="BoruiSystem-mapper" />
       </profile>
+      <profile name="Annotation profile for Alipay API Java Sdk" enabled="true">
+        <sourceOutputDir name="../../../Downloads/alipay-sdk-master/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../Downloads/alipay-sdk-master/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="alipay-sdk" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="alipay-sdk" target="1.6" />
       <module name="BoruiSystem-common" target="1.8" />
       <module name="BoruiSystem-configuration" target="1.8" />
       <module name="BoruiSystem-controller" target="1.8" />
@@ -37,6 +44,7 @@
       <module name="BoruiSystem-mapper" options="-parameters" />
       <module name="BoruiSystem-pojo" options="-parameters" />
       <module name="BoruiSystem-service" options="-parameters" />
+      <module name="alipay-sdk" options="-parameters" />
       <module name="wxpay-sdk" options="-parameters" />
     </option>
   </component>
