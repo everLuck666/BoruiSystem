@@ -34,6 +34,21 @@ public interface OrdersMapper extends tk.mybatis.mapper.common.Mapper<Orders> {
 
     List<Orders> getIncome(@Param("todays") Date todays, @Param("todaye")Date todaye);
 
+    //查找商品名称和商品单价
+    List getProductInfo();
+
+    //根据商品名称查找今日/本月销量
+    Integer querySales(String productName,@Param("todays") String todays, @Param("todaye")String todaye);
+
+    //根据商品名称查找累计销量
+    Integer queryTotalSales(String productName);
+
+    //查找合计部分今日售出/本月售出数据
+    Integer queryTotalStatistics(@Param("todays") Date todays, @Param("todaye")Date todaye);
+
+    //合计部分累计售出数据
+    Integer queryTotal();
+
 }
 
 

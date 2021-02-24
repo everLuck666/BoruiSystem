@@ -16,10 +16,7 @@ import net.seehope.pojo.Goods;
 import net.seehope.pojo.Invoices;
 import net.seehope.pojo.Orders;
 import net.seehope.pojo.Users;
-import net.seehope.pojo.bo.GetOrdersBo;
-import net.seehope.pojo.bo.OrdersInfoBo;
-import net.seehope.pojo.bo.PayBo;
-import net.seehope.pojo.bo.TotalStatisticBo;
+import net.seehope.pojo.bo.*;
 import net.seehope.pojo.vo.OrderVo;
 import net.seehope.util.ExcelFormatUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -75,12 +72,90 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public List salesStatistic() {
-        return null;
+
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));//东八区时间
+
+        //获取本月最小天数
+        int day = c.getActualMinimum(Calendar.DAY_OF_MONTH);
+        System.out.println(day);
+        //获取本月最大天数
+        int days = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        System.out.println(days);
+        c.set(Calendar.DAY_OF_MONTH,day);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+
+        Date dates = c.getTime();
+
+        c.set(Calendar.DAY_OF_MONTH,days);
+        c.set(Calendar.HOUR_OF_DAY,23);
+        c.set(Calendar.MINUTE,59);
+        c.set(Calendar.SECOND,59);
+        c.set(Calendar.MILLISECOND,999);
+
+        Date datee = c.getTime();
+
+        long todays = indexService.getStartTime();
+        long todaye = indexService.getEndTime();
+
+        List<SalesStatisticBo> saleBo = null;
+
+        List<GoodsInfoBo> goods = ordersMapper.getProductInfo();
+        for (GoodsInfoBo good:goods){
+            Integer today = ordersMapper.querySales(good.getProductName(),String.valueOf(todays),String.valueOf(todaye));
+            Integer month = ordersMapper.querySales(good.getProductName(),String.valueOf(days),String.valueOf(datee));
+            Integer total = ordersMapper.queryTotalSales(good.getProductName());
+            SalesStatisticBo salesStatisticBo = new SalesStatisticBo();
+            salesStatisticBo.setProductName(good.getProductName());
+            salesStatisticBo.setProductPrice(good.getProductPrice());
+            salesStatisticBo.setToday(today.toString());
+            salesStatisticBo.setMonth(month.toString());
+            salesStatisticBo.setTotal(total.toString());
+            System.out.println("------------"+salesStatisticBo);
+            saleBo.add(salesStatisticBo);
+        }
+        return saleBo;
     }
 
     @Override
     public TotalStatisticBo totalStatistic() {
-        return null;
+
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));//东八区时间
+
+        //获取本月最小天数
+        int day = c.getActualMinimum(Calendar.DAY_OF_MONTH);
+        System.out.println(day);
+        //获取本月最大天数
+        int days = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        System.out.println(days);
+        c.set(Calendar.DAY_OF_MONTH,day);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+
+        Date dates = c.getTime();
+
+        c.set(Calendar.DAY_OF_MONTH,days);
+        c.set(Calendar.HOUR_OF_DAY,23);
+        c.set(Calendar.MINUTE,59);
+        c.set(Calendar.SECOND,59);
+        c.set(Calendar.MILLISECOND,999);
+
+        Date datee = c.getTime();
+
+        long todays = indexService.getStartTime();
+        long todaye = indexService.getEndTime();
+
+        TotalStatisticBo totalStatisticBo = new TotalStatisticBo();
+        Integer today = ordersMapper.queryTotalStatistics(new Date(todays),new Date(todaye));
+        Integer month = ordersMapper.queryTotalStatistics(dates,datee);
+        Integer total = ordersMapper.queryTotal();
+        totalStatisticBo.setDay(today.toString());
+        totalStatisticBo.setMonth(month.toString());
+        totalStatisticBo.setTotal(total.toString());
+        System.out.println("***********"+totalStatisticBo);
+        return totalStatisticBo;
     }
 
     @Override

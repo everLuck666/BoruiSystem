@@ -44,6 +44,18 @@ public class OrdersController {
         return RestfulJson.isOk(ordersService.getFinishedOrders());
     }
 
+    @ApiOperation("获取销量统计上面部分数据")
+    @GetMapping(value = "sales",produces="application/json;charset=UTF-8")
+    public RestfulJson getSalesStatistic(){
+        return RestfulJson.isOk(ordersService.salesStatistic());
+    }
+
+    @ApiOperation("获取销量统计合计部分数据")
+    @GetMapping(value = "total",produces="application/json;charset=UTF-8")
+    public RestfulJson getTotalStatistic(){
+        return RestfulJson.isOk(ordersService.totalStatistic());
+    }
+
     @ApiOperation("根据条件获取订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页数", dataType = "String"),

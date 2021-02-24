@@ -143,5 +143,6 @@
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.18" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.64" level="project" />
+    <orderEntry type="module" module-name="alipay-sdk" />
   </component>
 </module>

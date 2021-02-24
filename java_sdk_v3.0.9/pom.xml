@@ -78,6 +78,12 @@
             <version>2.1.2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk</artifactId>
+            <version>1.0.0_20180208193504</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
