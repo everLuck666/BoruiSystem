@@ -5,6 +5,10 @@ import javax.persistence.*;
 
 @Table(name = "`users`")
 public class Users implements Serializable {
+
+
+    private static final long serialVersionUID = 5953187847630075763L;
+
     @Id
     @Column(name = "`user_id`")
     private String userId;
@@ -64,7 +68,7 @@ public class Users implements Serializable {
     @Column(name = "`subscribe_status`")
     private String subscribeStatus;
 
-    private static final long serialVersionUID = 1L;
+
 
     /**
      * @return user_id

@@ -13,6 +13,7 @@ public class WechatConstant {
     public final static String APPID = "wxf6cee523358953d7"; // 写⾃⼰的
     public final static String SECRET = "c4f4acaa0a2015ae3083fd8dda3b34b6"; // 写⾃⼰的SECRET
 
-    //支付成功的回调地址
+    //微信支付成功的回调地址
     public final  static  String SUCCESS_NOTIFY = "http://borui.cn.utools.club/wxPay/success";
+
 }

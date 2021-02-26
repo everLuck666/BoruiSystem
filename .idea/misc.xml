@@ -14,7 +14,8 @@
         <option value="$PROJECT_DIR$/BoruiSystem-pojo/pom.xml" />
         <option value="$PROJECT_DIR$/BoruiSystem-service/pom.xml" />
         <option value="$PROJECT_DIR$/java_sdk_v3.0.9/pom.xml" />
-        <option value="$USER_HOME$/Downloads/alipay-sdk-master/pom.xml" />
+        <option value="$PROJECT_DIR$/../Downloads/alipay-sdk-master/pom.xml" />
+        <option value="$PROJECT_DIR$/alipay-sdk-master/pom.xml" />
       </list>
     </option>
   </component>

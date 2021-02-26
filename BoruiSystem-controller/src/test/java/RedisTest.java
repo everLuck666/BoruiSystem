@@ -1,11 +1,14 @@
 import net.seehope.Application;
 import net.seehope.SmsSendService;
 import net.seehope.mapper.UsersMapper;
+import net.seehope.pojo.Users;
+import net.seehope.util.SerializeUtil;
 import net.seehope.util.SmsUtils;
 import org.bouncycastle.crypto.tls.UserMappingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -17,6 +20,7 @@ import java.util.List;
 @SpringBootTest(classes = Application.class)
 public class RedisTest {
 
+//    private static final Object JSON = ;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -52,6 +56,22 @@ public class RedisTest {
         List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
         String message = SmsUtils.connect("code1","你好呀");
         smsSendService.sendAllPeople(message);
+    }
+
+
+    @Test
+    public void textRrdis() {
+//
+        //设置user对象
+        Users user =new Users();
+       user.setUserName("lala");
+
+        //把user对象序列化后存储进redis
+        redisTemplate.opsForValue().set("123", user);
+
+        //从redis取出user后，把user对象反序列化
+        Users user2=(Users) redisTemplate.opsForValue().get("123");
+       System.out.println(user2.getUserName());
     }
 
 

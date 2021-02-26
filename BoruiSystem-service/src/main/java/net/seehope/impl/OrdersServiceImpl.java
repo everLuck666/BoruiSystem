@@ -64,7 +64,7 @@ public class OrdersServiceImpl implements OrdersService {
     IndexService indexService;
 
     @Autowired
-    private RedisTemplate<Object,Object> redisTemplate;
+    private RedisTemplate  redisTemplate;
 
 
     @Override
@@ -482,7 +482,7 @@ public class OrdersServiceImpl implements OrdersService {
         String userId = UUID.randomUUID().toString();
 
         //序列化字符串方式
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
+       // redisTemplate.setKeySerializer(new StringRedisSerializer());
         Users bo = (Users)redisTemplate.opsForValue().get(userId);
         if (null == bo){
             users.setSubscribeStatus(payBo.getFlag());
@@ -529,7 +529,7 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setRemark(payBo.getNote());//客户的备注
             orders.setStatus(SendStatus.UNSEND.getStatus()+"");//发货未发货
             orders.setUserId(userId);
-            orders.setOrderStatus(OrderType.NOFINISH.getType()+"");
+            orders.setOrderStatus(OrderType.FINISH.getType()+"");
             orders.setOrderTime(new Date());
 
             Orders od = (Orders)redisTemplate.opsForValue().get(orderId);

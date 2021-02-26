@@ -54,7 +54,7 @@ public class Orders implements Serializable {
     @Column(name = "`status`")
     private String status;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1034999690279173114L;
 
     /**
      * @return order_id

@@ -39,7 +39,7 @@ public class Invoices implements Serializable {
     @Column(name = "`tax_id`")
     private String taxId;
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1103650355354597779L;
 
     /**
      * @return order_id
