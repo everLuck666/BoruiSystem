@@ -83,7 +83,6 @@ public class WxpayController {
 
 
 
-
         JSONArray jsonArray = jsonObject.getJSONArray("product");
         StringBuffer stringBuffer = new StringBuffer();
         StringBuffer body = new StringBuffer();
@@ -106,12 +105,9 @@ public class WxpayController {
         String[] message = ordersService.pretreatment(payBo);
         String orderId = message[0];
         int totalPrice = Integer.parseInt(message[1]);
+        String userId = message[2];
 
 
-
-
-        String userId = "123";
-        System.out.println("---------userId:"+userId);
 
         // 获取请求ip地址
         String ip = request.getHeader("x-forwarded-for");
@@ -135,6 +131,7 @@ public class WxpayController {
         weChatPayBo.setOrderId(orderId);
         weChatPayBo.setPhone(payBo.getPhone());
         weChatPayBo.setTotalPrice(totalPrice);
+        weChatPayBo.setUserId(userId);
         System.out.println(stringBuffer.toString().substring(0,stringBuffer.length()-1));
         weChatPayBo.setProductNames(stringBuffer.toString().substring(0,stringBuffer.length()-1));
         if(payType.equals("微信")){
@@ -164,6 +161,9 @@ public class WxpayController {
            String orderId = params[0];
            String phone = params[1];
            String productNames = params[2];
+           String userId = params[3];
+           ordersService.insertOrders(orderId,userId);
+
             if(!ordersService.isOrderFinish(orderId)){
                String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
                 System.out.println("message"+message);

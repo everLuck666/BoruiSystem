@@ -566,7 +566,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 
         }
-        String[] message = new String[]{orderId,totalPrice+""};
+        String[] message = new String[]{orderId,totalPrice+"",userId};
 
         return message;
 

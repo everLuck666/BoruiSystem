@@ -99,7 +99,7 @@ public class WxPayServiceImpl implements WxPayService {
         SortedMap<String, String> parameters = new TreeMap<String, String>();
         parameters.put("appid", WechatConstant.APPID);
         parameters.put("body", weChatPayBo.getBody());
-        parameters.put("attach",weChatPayBo.getOrderId()+"#"+weChatPayBo.getPhone()+"#"+weChatPayBo.getProductNames());
+        parameters.put("attach",weChatPayBo.getOrderId()+"#"+weChatPayBo.getPhone()+"#"+weChatPayBo.getProductNames()+"#"+weChatPayBo.getUserId());
         parameters.put("mch_id", WechatConstant.MCH_ID);
         parameters.put("out_trade_no", weChatPayBo.getOrderId());
         parameters.put("spbill_create_ip", weChatPayBo.getIpAddress());
