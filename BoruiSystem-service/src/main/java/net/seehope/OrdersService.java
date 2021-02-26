@@ -73,4 +73,7 @@ public interface OrdersService {
 
     //判断订单是否已经完成了支付状态
     boolean isOrderFinish(String orderId);
+
+    //订单完成之后后，将订单所有信息插入数据库
+    void insertOrders(String userId,String orderId);
 }

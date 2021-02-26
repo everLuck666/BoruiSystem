@@ -28,6 +28,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -59,6 +62,10 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Autowired
     IndexService indexService;
+
+    @Autowired
+    private RedisTemplate<Object,Object> redisTemplate;
+
 
     @Override
     public Integer getWaitingOrders() {
@@ -474,7 +481,10 @@ public class OrdersServiceImpl implements OrdersService {
         Users usersValue = usersMapper.selectOne(users);
         String userId = UUID.randomUUID().toString();
 
-
+        //序列化字符串方式
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        Users bo = (Users)redisTemplate.opsForValue().get(userId);
+        if (null == bo){
             users.setSubscribeStatus(payBo.getFlag());
             users.setUserId(userId);
             users.setUserName(payBo.getUserName());
@@ -484,7 +494,20 @@ public class OrdersServiceImpl implements OrdersService {
             users.setPhone(payBo.getPhone());
             users.setIdentity(UserType.USER.getType());
             users.setPassword(payBo.getPhone());
-            usersMapper.insert(users);
+            redisTemplate.opsForValue().set(userId,users, Duration.ofMinutes(30L));
+        }
+
+
+//            users.setSubscribeStatus(payBo.getFlag());
+//            users.setUserId(userId);
+//            users.setUserName(payBo.getUserName());
+//            users.setVersion("0");
+//            users.setAddress(payBo.getAddress());
+//            users.setEmail(payBo.getEmail());
+//            users.setPhone(payBo.getPhone());
+//            users.setIdentity(UserType.USER.getType());
+//            users.setPassword(payBo.getPhone());
+//            usersMapper.insert(users);
 
        String orderId = UUID.randomUUID().toString().replace("-","");
        int totalPrice = 0;
@@ -508,7 +531,19 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setUserId(userId);
             orders.setOrderStatus(OrderType.NOFINISH.getType()+"");
             orders.setOrderTime(new Date());
-            ordersMapper.insert(orders);
+
+            Orders od = (Orders)redisTemplate.opsForValue().get(orderId);
+            if (null == od){
+                redisTemplate.opsForValue().set(orderId,orders,Duration.ofMinutes(30L));
+            }
+//            orders.setOrderAmout(priceTemp+"");
+//            orders.setInvoiceType(payBo.getInvoiceTitle());//发票类型
+//            orders.setRemark(payBo.getNote());//客户的备注
+//            orders.setStatus(SendStatus.UNSEND.getStatus()+"");//发货未发货
+//            orders.setUserId(userId);
+//            orders.setOrderStatus(OrderType.NOFINISH.getType()+"");
+//            orders.setOrderTime(new Date());
+//            ordersMapper.insert(orders);
         }
 
         if(payBo.getInvoiceFlag().equals("需要发票"))    {
@@ -519,10 +554,16 @@ public class OrdersServiceImpl implements OrdersService {
             invoices.setOrderId(orderId);
             invoices.setTaxId(payBo.getTaxId());
             invoices.setInvoiceType(payBo.getInvoiceType());
-            Invoices invoicesValue = invoicesMapper.selectOne(invoices);
-            if(invoicesValue == null){
-                invoicesMapper.insert(invoices);
+//            Invoices invoicesValue = invoicesMapper.selectOne(invoices);
+//            if(invoicesValue == null){
+//                invoicesMapper.insert(invoices);
+//            }
+            Invoices invo = (Invoices)redisTemplate.opsForValue().get(userId+orderId);
+            if (null == null){
+                redisTemplate.opsForValue().set(userId+orderId,invoices,Duration.ofMinutes(30L));
             }
+
+
 
         }
         String[] message = new String[]{orderId,totalPrice+""};
@@ -532,6 +573,22 @@ public class OrdersServiceImpl implements OrdersService {
 
 
 
+    }
+
+    @Override
+    public void insertOrders(String userId, String orderId) {
+        Users users = (Users)redisTemplate.opsForValue().get(userId);
+        if (null != users){
+            usersMapper.insert(users);
+        }
+        Orders orders = (Orders)redisTemplate.opsForValue().get(orderId);
+        if (null != orders){
+            ordersMapper.insert(orders);
+        }
+        Invoices invoices = (Invoices)redisTemplate.opsForValue().get(userId+orderId);
+        if (null != invoices){
+            invoicesMapper.insert(invoices);
+        }
     }
 
     @Override
