@@ -11,6 +11,16 @@ public class WeChatPayBo {
     //购买的商品类别的名字
     private String productNames;
 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getProductNames() {
         return productNames;
     }

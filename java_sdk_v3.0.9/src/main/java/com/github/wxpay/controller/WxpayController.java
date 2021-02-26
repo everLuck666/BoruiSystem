@@ -1,46 +1,42 @@
 package com.github.wxpay.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.wxpay.bo.UserOrderInformationBo;
+
 import com.github.wxpay.sdk.WXPayUtil;
 import com.github.wxpay.service.AlipayService;
 import com.github.wxpay.service.WxPayService;
 import com.github.wxpay.vo.WxPayNotifyVO;
+import lombok.extern.slf4j.Slf4j;
 import net.seehope.OrdersService;
 import net.seehope.SmsSendService;
-import net.seehope.jwt.JWTUtils;
 
 import net.seehope.pojo.bo.PayBo;
 import net.seehope.pojo.bo.WeChatPayBo;
 import net.seehope.util.SmsUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+@Slf4j
 @RestController
 @RequestMapping("wxPay")
 public class WxpayController {
 
     private static final String APPID = "wx22b4e8dc67f0ea0c";
     private static final String SECRET = "7c1355ff038ca93c0d49106ff367636e";
+
+    /**支付宝应用设置本地公钥后生成对应的支付宝公钥（非本地生成的公钥）*/
+    private static String alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArfd2HmjRDUjQLwYPp62kVi7wAoYViHCyurtNN5kd5vyEKvdATdz6JX5M5hUszacQVo7sydLWap1z0hyhg7qBU2qxfGS8Ge6/cX09RivT4WXRfC+0R7EFoNCUoKtwpAgrb5WWlG39v2wS9owTrntZCOgUS6FE8wLGiSJ/9hP3v9XuMbhEO+pRl6r4N+d9B9k2vmxuanNSnPv+3PjQQ8S5OM9S0bt5wMKH23QOnbKZQkgcljuQHephuI1p+OG2iAdH1Ku+Ub8221mP/5TIyPwgrzQGLefJCSgYkdWrRH6WjNSj7IGqP9CLM4G+vlEdlhJa6JmCCyUc6Vb09g9BvTwj+QIDAQAB";
+
+    Logger logger = LoggerFactory.getLogger("alipay");
 
     @Autowired
     WxPayService wxPayService;
@@ -53,9 +49,9 @@ public class WxpayController {
 
 
 
-    @PostMapping(value = "/pay",produces="application/json;charset=UTF-8")
+    @GetMapping(value = "/pay",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public RestfulJson pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
+    public Map<String, String> pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
         System.out.println("我进来了");
        // System.out.println("token是"+token);
         //itemService.isCanBug(userOrderInformationBo.getSpecies());//判断门票是否可以买
@@ -87,7 +83,6 @@ public class WxpayController {
 
 
 
-
         JSONArray jsonArray = jsonObject.getJSONArray("product");
         StringBuffer stringBuffer = new StringBuffer();
         StringBuffer body = new StringBuffer();
@@ -95,7 +90,7 @@ public class WxpayController {
         Map<String,String> map = new HashMap<>();
         for (int i = 0;i<jsonArray.size();i++){
             JSONObject object = jsonArray.getJSONObject(i);
-            String pno  = object.getString("item");
+            String pno  = object.getString("pno");
             String number = object.getString("num");
             map.put(pno,number);
             body.append(pno);
@@ -110,12 +105,9 @@ public class WxpayController {
         String[] message = ordersService.pretreatment(payBo);
         String orderId = message[0];
         int totalPrice = Integer.parseInt(message[1]);
+        String userId = message[2];
 
 
-
-
-        String userId = "123";
-        System.out.println("---------userId:"+userId);
 
         // 获取请求ip地址
         String ip = request.getHeader("x-forwarded-for");
@@ -139,6 +131,7 @@ public class WxpayController {
         weChatPayBo.setOrderId(orderId);
         weChatPayBo.setPhone(payBo.getPhone());
         weChatPayBo.setTotalPrice(totalPrice);
+        weChatPayBo.setUserId(userId);
         System.out.println(stringBuffer.toString().substring(0,stringBuffer.length()-1));
         weChatPayBo.setProductNames(stringBuffer.toString().substring(0,stringBuffer.length()-1));
         if(payType.equals("微信")){
@@ -168,6 +161,9 @@ public class WxpayController {
            String orderId = params[0];
            String phone = params[1];
            String productNames = params[2];
+           String userId = params[3];
+           ordersService.insertOrders(orderId,userId);
+
             if(!ordersService.isOrderFinish(orderId)){
                String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
                 System.out.println("message"+message);
@@ -180,35 +176,35 @@ public class WxpayController {
     }
 
 
-    /**支付宝回调接口*/
-    /**不返回success，支付宝会在25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）才会结束通知发送。*/
-    @RequestMapping(value = "alinotify")
-    public String aliNotify(HttpServletRequest request) throws Exception {
-        try {
-            log.info("进入支付宝回调地址");
-            Map<String, String> params = new HashMap<>();
-            Map<String, String[]> requestParams = request.getParameterMap();
-            log.info("支付宝验签参数：{}", JSON.toJSONString(requestParams));
-            for (String name : requestParams.keySet()) {
-                String[] values = requestParams.get(name);
-                String valueStr = "";
-                for (int i = 0; i < values.length; i++) {
-                    valueStr = (i == values.length - 1) ? valueStr + values[i]
-                            : valueStr + values[i] + ",";
-                }
-                params.put(name, valueStr);
-            }
-            boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
-            if (flag) {
-                alipayService.aliNotify(params);
-                log.info("支付宝通知更改状态成功！");
-                return "success";
-            }
-        } catch (Throwable e) {
-            log.error("exception: ", e);
-        }
-        return "failure";
-    }
+//    /**支付宝回调接口*/
+//    /**不返回success，支付宝会在25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）才会结束通知发送。*/
+//    @RequestMapping(value = "alinotify")
+//    public String aliNotify(HttpServletRequest request) throws Exception {
+//        try {
+//            log.info("进入支付宝回调地址");
+//            Map<String, String> params = new HashMap<>();
+//            Map<String, String[]> requestParams = request.getParameterMap();
+//            log.info("支付宝验签参数：{}", JSON.toJSONString(requestParams));
+//            for (String name : requestParams.keySet()) {
+//                String[] values = requestParams.get(name);
+//                String valueStr = "";
+//                for (int i = 0; i < values.length; i++) {
+//                    valueStr = (i == values.length - 1) ? valueStr + values[i]
+//                            : valueStr + values[i] + ",";
+//                }
+//                params.put(name, valueStr);
+//            }
+//            boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
+//            if (flag) {
+//                alipayService.aliNotify(params);
+//                log.info("支付宝通知更改状态成功！");
+//                return "success";
+//            }
+//        } catch (Throwable e) {
+//            log.error("exception: ", e);
+//        }
+//        return "failure";
+//    }
 
 
 
