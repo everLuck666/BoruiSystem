@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,7 +105,7 @@ public class OrdersServiceImpl implements OrdersService {
         long todays = indexService.getStartTime();
         long todaye = indexService.getEndTime();
 
-        List<SalesStatisticBo> saleBo = null;
+        List saleBo = new LinkedList();
 
         List<GoodsInfoBo> goods = ordersMapper.getProductInfo();
         for (GoodsInfoBo good:goods){
@@ -116,6 +115,9 @@ public class OrdersServiceImpl implements OrdersService {
             SalesStatisticBo salesStatisticBo = new SalesStatisticBo();
             salesStatisticBo.setProductName(good.getProductName());
             salesStatisticBo.setProductPrice(good.getProductPrice());
+            today = today==null?0:today;
+            month = month==null?0:month;
+            total = total==null?0:total;
             salesStatisticBo.setToday(today.toString());
             salesStatisticBo.setMonth(month.toString());
             salesStatisticBo.setTotal(total.toString());
@@ -154,10 +156,14 @@ public class OrdersServiceImpl implements OrdersService {
         long todays = indexService.getStartTime();
         long todaye = indexService.getEndTime();
 
+
         TotalStatisticBo totalStatisticBo = new TotalStatisticBo();
         Integer today = ordersMapper.queryTotalStatistics(new Date(todays),new Date(todaye));
         Integer month = ordersMapper.queryTotalStatistics(dates,datee);
         Integer total = ordersMapper.queryTotal();
+        today = today==null?0:today;
+        month = month==null?0:month;
+        total = total==null?0:total;
         totalStatisticBo.setDay(today.toString());
         totalStatisticBo.setMonth(month.toString());
         totalStatisticBo.setTotal(total.toString());
@@ -231,7 +237,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     private InputStream export(List<OrdersInfoBo> list) {
         logger.info(">>>>>>>>>>>>>>>>>>>>开始进入导出方法>>>>>>>>>>");
-        Map<String, String> map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put("0","未发货");
         map.put("1","已发货");
         map.put("2","无");
@@ -401,7 +407,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<OrderVo> getAllIncome() {
         Date minDate =ordersMapper.orderMinDate();
-        List list = new ArrayList();
+        List<OrderVo> list = new ArrayList<OrderVo>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(minDate);
@@ -514,7 +520,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         while (iterator.hasNext()){
 
-            Map.Entry entry = iterator.next();
+            Map.Entry<String, String> entry = iterator.next();
             String productId = entry.getKey().toString();
             String num = entry.getValue().toString();
             Orders orders = new Orders();

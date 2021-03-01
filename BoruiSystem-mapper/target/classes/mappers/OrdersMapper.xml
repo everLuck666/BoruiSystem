@@ -40,6 +40,7 @@
         <result column="remark" property="remark"></result>
         <result column="invoices_type" property="invoicesType"></result>
         <result column="status" property="status"></result>
+        <result column="email" property="email"></result>
     </resultMap>
 
     <select id="getIncome" resultMap="orders">
@@ -60,7 +61,7 @@
     </select>
 
     <select id="getProductInfo" resultMap="productInfo">
-        select product_name,product_price from sales_statistics
+        select product_name,product_price from goods
     </select>
 
     <resultMap id="productInfo" type="net.seehope.pojo.bo.GoodsInfoBo">

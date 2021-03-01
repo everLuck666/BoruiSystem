@@ -68,6 +68,12 @@ public class OrdersController {
         return RestfulJson.isOk(ordersService.getAllOrders(ordersBo));
     }
 
+    @ApiOperation("获取发票信息")
+    @GetMapping("invoices")
+    public RestfulJson getInvoices(String orderId){
+        return RestfulJson.isOk(ordersService.getInvoices(orderId));
+    }
+
     @ApiOperation("修改订单状态")
     @ApiImplicitParam(name = "orderId",value = "订单号",dataType = "String")
     @PostMapping(value = "updateOrder",produces="application/json;charset=UTF-8")

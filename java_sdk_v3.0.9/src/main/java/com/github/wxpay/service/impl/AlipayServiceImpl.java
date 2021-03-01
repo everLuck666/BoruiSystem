@@ -26,8 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -37,10 +36,20 @@ public class AlipayServiceImpl implements AlipayService {
     public  void alipay(HttpServletResponse res, WeChatPayBo weChatPayBo){
         // 1. 设置参数（全局只需设置一次）
         Factory.setOptions(getOptions());
+
+        List<Object> goodsDetailList = new ArrayList<>();
+        Map<String, Object> optionalArgs = new HashMap<>();
+        optionalArgs.put("productName", weChatPayBo.getProductNames());
+        optionalArgs.put("orderId", weChatPayBo.getOrderId());
+        optionalArgs.put("userId",weChatPayBo.getUserId());
+        optionalArgs.put("phone",weChatPayBo.getPhone());
+        goodsDetailList.add(optionalArgs);
+
         try {
             double price = weChatPayBo.getTotalPrice()/100.0;
             // 2. 发起API调用（以创建当面付收款二维码为例）
-            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace().preCreate(weChatPayBo.getProductNames(), weChatPayBo.getOrderId(), price+"");
+            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace().optional("goodsDetails",goodsDetailList)
+                    .preCreate(weChatPayBo.getProductNames(), weChatPayBo.getOrderId(), price+"");
             // 3. 处理响应或异常
             if (ResponseChecker.success(response)) {
                 System.out.println("调用成功");

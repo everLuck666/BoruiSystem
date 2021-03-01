@@ -15,6 +15,7 @@ public class OrdersInfoBo {
     private String remark;
     private String invoicesType;
     private String status;
+    private String email;
 
 
 }

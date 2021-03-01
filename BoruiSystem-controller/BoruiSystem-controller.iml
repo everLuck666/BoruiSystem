@@ -25,6 +25,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="alipay-sdk" />
     <orderEntry type="module" module-name="wxpay-sdk" />
     <orderEntry type="module" module-name="BoruiSystem-configuration" />
     <orderEntry type="library" name="Maven: com.thetransactioncompany:cors-filter:2.5" level="project" />

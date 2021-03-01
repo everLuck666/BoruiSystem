@@ -185,35 +185,42 @@ public class WxpayController {
         try {
             log.info("进入支付宝回调地址");
             Map<String, String> params = new HashMap<>();
-           // Map<String, String[]> requestParams = request.getParameterMap();
-            //log.info("支付宝验签参数：{}", JSON.toJSONString(requestParams));
-//            for (String name : requestParams.keySet()) {
-//                String[] values = requestParams.get(name);
-//                String valueStr = "";
-//                for (int i = 0; i < values.length; i++) {
-//                    valueStr = (i == values.length - 1) ? valueStr + values[i]
-//                            : valueStr + values[i] + ",";
-//                }
-//
-//                params.put(name, valueStr);
+            Map<String, String[]> requestParams = request.getParameterMap();
+            log.info("支付宝验签参数：{}", JSON.toJSONString(requestParams));
+            for (String name : requestParams.keySet()) {
+                String[] values = requestParams.get(name);
+                String valueStr = "";
+                for (int i = 0; i < values.length; i++) {
+                    valueStr = (i == values.length - 1) ? valueStr + values[i]
+                            : valueStr + values[i] + ",";
+                }
+
+                params.put(name, valueStr);
 
 
 
-//            }
+            }
+//            System.out.println("------"+params.get("productNames") + params.get("orderId")+ params.get("userId") + params.get("phone"));
 
 
-            String productNames = request.getParameter("productNames");
-           String orderId = request.getParameter("orderId");
-           String userId = request.getParameter("userId");
-           String phone = request.getParameter("phone");
-           params.put("productNames",productNames);
-           params.put("orderId",orderId);
-           params.put("userId",userId);
-           params.put("phone",phone);
+            String productNames = params.get("productNames");
+           String orderId = params.get("orderId");
+           String userId = params.get("userId");
+           String phone = params.get("phone");
+
             boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
             if (flag) {
-                System.out.println("眼前成功");
+                System.out.println("验签成功");
                 alipayService.aliNotify(params);
+
+                if(!ordersService.isOrderFinish(orderId)){
+                    ordersService.insertOrders(userId,orderId);
+                    String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
+                    System.out.println("message"+message);
+                    smsSendService.sendSuccess(message,phone);
+                    ordersService.finishOrder(orderId);
+                }
+
                 log.info("支付宝通知更改状态成功！");
                 return "success";
             }
