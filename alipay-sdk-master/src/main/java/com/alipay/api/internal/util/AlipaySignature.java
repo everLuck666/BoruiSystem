@@ -220,6 +220,7 @@ public class AlipaySignature {
             content.append((i == 0 ? "" : "&") + key + "=" + value);
         }
 
+        System.out.println(content);
         return content.toString();
     }
 
@@ -255,7 +256,7 @@ public class AlipaySignature {
             String charset,String signType) throws AlipayApiException {
 		String sign = params.get("sign");
 		String content = getSignCheckContentV1(params);
-		
+
 		return rsaCheck(content, sign, publicKey, charset,signType);
     }
 
@@ -271,7 +272,6 @@ public class AlipaySignature {
             String charset,String signType) throws AlipayApiException {
 		String sign = params.get("sign");
 		String content = getSignCheckContentV2(params);
-		
 		return rsaCheck(content, sign, publicKey, charset,signType);
 	}
 

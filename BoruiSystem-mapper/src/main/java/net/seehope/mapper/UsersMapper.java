@@ -19,6 +19,9 @@ public interface UsersMapper extends tk.mybatis.mapper.common.Mapper<Users> {
     //查找所有客户信息
     List queryUserInfos();
 
+    //删除客户
+    void deleteUser(String userId);
+
     List<String> getAllPeoplePhone(@Param("subscribe") String  subscribe);
 }
 
