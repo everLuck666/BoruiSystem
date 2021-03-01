@@ -38,18 +38,28 @@ public class AlipayServiceImpl implements AlipayService {
         Factory.setOptions(getOptions());
 
         List<Object> goodsDetailList = new ArrayList<>();
+        Map<String, Object> goodsDetail = new HashMap<>();
+//        goodsDetail.put("productName", weChatPayBo.getProductNames());
+//        goodsDetail.put("goods_name", "Apple iPhone11 128G");
+//        goodsDetail.put("orderId", weChatPayBo.getOrderId());
+//        goodsDetail.put("userId",weChatPayBo.getUserId());
+//        goodsDetail.put("phone",weChatPayBo.getPhone());
+        goodsDetail.put("goods_id", "apple-01");
+        goodsDetail.put("goods_name", "Apple iPhone11 128G");
+        goodsDetail.put("quantity", 1);
+        goodsDetail.put("price", "5799.00");
+        goodsDetailList.add(goodsDetail);
+
         Map<String, Object> optionalArgs = new HashMap<>();
-        optionalArgs.put("productName", weChatPayBo.getProductNames());
-        optionalArgs.put("orderId", weChatPayBo.getOrderId());
-        optionalArgs.put("userId",weChatPayBo.getUserId());
-        optionalArgs.put("phone",weChatPayBo.getPhone());
-        goodsDetailList.add(optionalArgs);
+        optionalArgs.put("goods_detail", goodsDetailList);
+
+        System.out.println("orderId"+weChatPayBo.getOrderId());
 
         try {
             double price = weChatPayBo.getTotalPrice()/100.0;
             // 2. 发起API调用（以创建当面付收款二维码为例）
-            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace().optional("goodsDetails",goodsDetailList)
-                    .preCreate(weChatPayBo.getProductNames(), weChatPayBo.getOrderId(), price+"");
+            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace()
+                    .preCreate(weChatPayBo.getProductNames()+"~"+weChatPayBo.getUserId()+"~"+weChatPayBo.getPhone(), weChatPayBo.getOrderId(), price+"");
             // 3. 处理响应或异常
             if (ResponseChecker.success(response)) {
                 System.out.println("调用成功");
@@ -123,7 +133,7 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     public com.alipay.api.response.AlipayTradeQueryResponse queryOrder(String orderId) throws Exception {
         String aliAppId = "2021002128658398";
-        String aliUrl = "openapi.alipay.com";
+        String aliUrl = "http://openapi.alipay.com";
         String aliAppPrivateKey = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCiqnFJEGfujxUddcQScOo/A0vrVV1xmWaZjraWrlSjUAidxm1DuY6Aa1usev/4s3n6PD3FlClGaPbvpsBoyNYsVrRuwdxKs2rzL5cKsTab4VH4qDzey5t9ymWrk3LwBsNBWIct7+i11bEQqCt40MDDuGyj2leK93nYJBA6IFLQX5rDRtAH5kKfK3a5FQQjMfBcgDQFzg3Y4fQ69VwIWtZ5gX00IC57IrAioI7YwFF9tkMFncVjJnbExG68QrMw2UiLj7ePSbzGv17LPyCxLPJNa38QHpGGjuKvF5XgkjddmwBG645cCbVj51NqzeaRL2urzdk2E94S9PEv/UmVqBebAgMBAAECggEBAJHNgsOB4BbVy5BfecMp0N1wYAFtv9dOL8feQs1nL1g/Kan6LQAyd4emM0Kz8XKDtQbWLmxF9IU3GngPGJITyt1tTkeknoeasHeQJaug0pkAaxAeBImTKSmkXGNhQ/nfpe6RooFLdGRgSVjr1CNzwgTs7vwjfqqCToWtNZpUVMaOKzc3e7WT/A5cI8h1/SRm24MngZiK8Q5286xv69/iCttIbVYKeUO7fZExNnoOh6f75cbN8WFo/jg1EO3CcqNfLffUNB3Yrg8SweF1f9xpYFr529hHrmywp194uibZurR3/A2rFNuMtc3QjCwLMBY2zbPj60VtfuzXD8xDPlCQh9ECgYEA5C42XND+YRtU412NEdDYrcgkZAJw11iZizmYLEATQpOgSK3iu8F6tlmVC+cj7MSP6tFtjC0vFLD5vOHTjw6rUHlQNlCblp9A2YWs6RBFSEgdxZeDC3M2j7EDYcD8qSQBhFhAAgVy1MIknkXgbRFfV4tiCCYTcE8zrUpNeKduMZkCgYEAtn9v3jg+uUSGWWTbq0+vmtZF1h9vj8op1YaUgD6L49WwSeXtwLA2qJkJ39UpfhjxtceHL5Y9q4VwBJgoFBM//fnuC8aRIBolhby0Bma+E7wWvsP0VyJhMT+LOcTO6+GVQ2k3LNXD8i3axbgo8nu+MaLBqdxwccOJf3b/pa7V+1MCgYACK0pLAZWZeLgK3UXNCI42wLNP3BIUifwTrb17ljRYqqyYZEbGgCVZfGqFTXIy+v9fPRRsg7Vx3ejR2de4AWyxfCW+DnAcM3FbYADvyj7OXBkkWrddMYAwR39/u2TrerMk/e3F1yVrTlkoxANJJiQg4etRpoMCy03zdMRdxEGw6QKBgDGJQ9dA0x280O7g5pOIjLTtpoUpgUG5cUOJRTPORnBwZ2qXo8Ji0mNPLxP3q0yT/sAFydcL4+9zx+UnW/GfDAanWYsOugPJtRepEgCO0NdQfagIToF8Tn9srSDgH/58++QRYi2kVIyfD7wNcefn2MdmU0UFFex7VA4qQdg6LdELAoGBALwH/00wKGcZu33nld7OrQPO6sbDvEN2HtTX4ZCWqT2IDDYPM543epW07wXfkVTPyscvUrHIlFHWPBMet4BGMZdDdWJZFk89I+J0tf6b7HAoxkm5RlFtxrn+9hr0EQGuWVllmHiLUrZFj/QYndQxA5UeueV/iS+VE0gz6yzntuQ9";
         String alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArfd2HmjRDUjQLwYPp62kVi7wAoYViHCyurtNN5kd5vyEKvdATdz6JX5M5hUszacQVo7sydLWap1z0hyhg7qBU2qxfGS8Ge6/cX09RivT4WXRfC+0R7EFoNCUoKtwpAgrb5WWlG39v2wS9owTrntZCOgUS6FE8wLGiSJ/9hP3v9XuMbhEO+pRl6r4N+d9B9k2vmxuanNSnPv+3PjQQ8S5OM9S0bt5wMKH23QOnbKZQkgcljuQHephuI1p+OG2iAdH1Ku+Ub8221mP/5TIyPwgrzQGLefJCSgYkdWrRH6WjNSj7IGqP9CLM4G+vlEdlhJa6JmCCyUc6Vb09g9BvTwj+QIDAQAB";
 

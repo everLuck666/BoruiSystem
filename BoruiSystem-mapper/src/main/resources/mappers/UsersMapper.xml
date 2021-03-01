@@ -5,7 +5,7 @@
 <mapper namespace="net.seehope.mapper.UsersMapper">
 
     <select id="queryUserInfos" resultMap="users">
-        select * from users_info
+        select * from users_info,users where user_info.userId=users.userId and users.version!='2'
     </select>
 
     <resultMap id="users" type="net.seehope.pojo.bo.UsersInfoBo">
@@ -16,10 +16,15 @@
         <result column="address" property="address"></result>
         <result column="product_name" property="productName"></result>
         <result column="order_amout" property="orderAmout"></result>
+        <result column="user_id" property="userId"></result>
     </resultMap>
 
     <update id="updateVersion"  parameterType="String">
     update  users set version = #{version} where user_id = #{userId}
+    </update>
+
+    <update id="deleteUser" parameterType="String">
+        update users set version='2' where user_id = #{userId}
     </update>
 
     <select id="getAllPeoplePhone" resultType="net.seehope.pojo.bo.StoreSendBo">

@@ -1,6 +1,5 @@
 package com.github.wxpay.controller;
 
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.*;
 @Slf4j
 @RestController
@@ -203,15 +203,21 @@ public class WxpayController {
 //            System.out.println("------"+params.get("productNames") + params.get("orderId")+ params.get("userId") + params.get("phone"));
 
 
-            String productNames = params.get("productNames");
-           String orderId = params.get("orderId");
-           String userId = params.get("userId");
-           String phone = params.get("phone");
+            String result = params.get("subject");
+            String productNames = result.split("~")[0];
+           String orderId = params.get("out_trade_no");
+           String userId = result.split("~")[1];
+           String phone = result.split("~")[2];
+
+
+
+
 
             boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
+            System.out.println(flag);
             if (flag) {
                 System.out.println("验签成功");
-                alipayService.aliNotify(params);
+//                alipayService.aliNotify(params);
 
                 if(!ordersService.isOrderFinish(orderId)){
                     ordersService.insertOrders(userId,orderId);
@@ -222,8 +228,10 @@ public class WxpayController {
                 }
 
                 log.info("支付宝通知更改状态成功！");
+
                 return "success";
             }
+            return "success";
         } catch (Throwable e) {
             log.error("exception: ", e);
         }

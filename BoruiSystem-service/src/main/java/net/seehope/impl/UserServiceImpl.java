@@ -111,9 +111,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteClient(String userId) {
-        Users users = new Users();
-        users.setUserId(userId);
-        usersMapper.delete(users);
+
+        usersMapper.deleteUser(userId);
     }
 
     @Override
