@@ -3,10 +3,15 @@ package net.seehope.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.seehope.SmsSendService;
+import net.seehope.UserService;
 import net.seehope.common.SmsConstant;
+import net.seehope.common.UserType;
+import net.seehope.mapper.SendMapper;
 import net.seehope.mapper.UsersMapper;
+import net.seehope.pojo.Send;
 import net.seehope.pojo.Users;
 import net.seehope.pojo.bo.SmsBo;
+import net.seehope.pojo.bo.StoreSendBo;
 import net.seehope.util.HttpUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -17,9 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 
@@ -27,6 +34,8 @@ import java.util.*;
 public class SmsSendServiceImpl implements SmsSendService {
     @Autowired
     UsersMapper usersMapper;
+    @Autowired
+    SendMapper sendMapper;
 //    @Override
 //    public void sendMessage(String message, String template) {
 //        String host = "http://yzx.market.alicloudapi.com";
@@ -101,42 +110,67 @@ public class SmsSendServiceImpl implements SmsSendService {
     }
 
     @Override
-    public void sendAllPeople(String message) {
-        List<String> usersList = usersMapper.getAllPeoplePhone("");
+    @Transactional
+    public void sendAllPeople(String message,String managerName) {
 
+
+        List<StoreSendBo> usersList = usersMapper.getAllPeoplePhone("");
         SmsBo smsBo = new SmsBo();
 
-        for(String phone:usersList){
+        for (StoreSendBo storeSendBo:usersList){
+            System.out.println(storeSendBo.getPhone());
+            System.out.println(storeSendBo.getUserName());
+
             smsBo.setMessage(message);
-            smsBo.setMobile(phone);
+            smsBo.setMobile(storeSendBo.getPhone());
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
-            sendMessage(smsBo);
+          //  sendMessage(smsBo);
         }
-
+        Send send  = new Send();
+        String messageStorage = "尊敬的客户您好！感谢您对本公司的信任，我司新品"+message.split(":")[1]+" 即将上市，诚邀您体验新品！退订回T";
+        send.setInformation(messageStorage);
+        send.setManagerName(managerName);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        Date date = new Date();
+        send.setTime(simpleDateFormat.format(date));
+        send.setUserType(UserType.ALL.getSubscribe_status());
+        sendMapper.insert(send);
 
     }
 
     @Override
-    public void sendPeopel(String message) {
+    public void sendPeopel(String message,String managerName) {
 
-        List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
+        List<StoreSendBo> usersList = usersMapper.getAllPeoplePhone("订阅");
 
         SmsBo smsBo = new SmsBo();
 
-        for(String phone:usersList){
+        for(StoreSendBo storeSendBo:usersList){
             smsBo.setMessage(message);
-            smsBo.setMobile(phone);
+            smsBo.setMobile(storeSendBo.getPhone());
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
-            sendMessage(smsBo);
+          //  sendMessage(smsBo);
         }
+
+
+
+        Send send  = new Send();
+        String messageStorage = "尊敬的客户您好！感谢您对本公司的信任，我司新品"+message.split(":")[1]+" 即将上市，诚邀您体验新品！退订回T";
+        send.setInformation(messageStorage);
+        send.setManagerName(managerName);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        Date date = new Date();
+        send.setTime(simpleDateFormat.format(date));
+        send.setUserType(UserType.SUBSCRIBESTATUS.getSubscribe_status());
+        sendMapper.insert(send);
     }
 
     @Override
-    public void sendFlow(String message,String phone) {
+    public void sendFlow(String phone, Send send) {
         SmsBo smsBo = new SmsBo();
-        smsBo.setMessage(message);
+        smsBo.setMessage(send.getInformation());
         smsBo.setMobile(phone);
         smsBo.setOrderId(UUID.randomUUID().toString());
         smsBo.setTemplate(SmsConstant.sendProductTemplate);
@@ -151,6 +185,12 @@ public class SmsSendServiceImpl implements SmsSendService {
         smsBo.setOrderId(UUID.randomUUID().toString());
         smsBo.setTemplate(SmsConstant.willSendTemplate3);
         sendMessage(smsBo);
+    }
+
+    @Override
+    public List<Send> getAllInformatin() {
+
+        return sendMapper.selectAll();
     }
 
     /**

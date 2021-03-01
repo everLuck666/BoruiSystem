@@ -71,11 +71,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-//        //拦截教师
-//        List includePathLists = new ArrayList();
-//        includePathLists.add("/students/student");
-//        registry.addInterceptor(new MyInterceptor(new String[]{UserType.TEACHER.getType() + ""}, "不是老师token", userService))
-//                .addPathPatterns(includePathLists);
+        //后台
+        List includePathLists = new ArrayList();
+        includePathLists.add("/sms/sms");
+        registry.addInterceptor(new MyInterceptor(new String[]{UserType.SUPERMANAGER.getType() + ""}, "不是管理员token", userService))
+                .addPathPatterns(includePathLists);
 //
 //
 //        //拦截学生

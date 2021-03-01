@@ -54,7 +54,7 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public void renameTo(String oldName, String newName,String path) throws IOException {
 
-        File tempFile = new File("AcupunctureAndMoxibustionSystem-controller");
+        File tempFile = new File("BoruiSystem-controller");
 
 
         File oldFile = new File(tempFile.getAbsolutePath()+path+"/"+oldName);
@@ -71,6 +71,7 @@ public class IndexServiceImpl implements IndexService {
             logger.warn("已经重新命名");
 
         }else{
+            deleteFile(oldName,path);
             throw new RuntimeException("Error");
         }
     }
@@ -93,5 +94,19 @@ public class IndexServiceImpl implements IndexService {
         calendar.set(Calendar.SECOND,59);
         calendar.set(Calendar.MILLISECOND,999);
         return calendar.getTime().getTime();
+    }
+
+
+    @Override
+    public void deleteFile(String fileName, String path) {
+        File tempFile = new File(FilePath.path);
+        File dest = new File(tempFile.getAbsolutePath() + path + fileName);
+
+        if (dest != null) {
+            logger.info("开始删除"+fileName);
+            dest.delete();
+        } else {
+            logger.warn("请注意要删除的文件不存在");
+        }
     }
 }

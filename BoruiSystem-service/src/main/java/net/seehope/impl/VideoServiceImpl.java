@@ -62,6 +62,13 @@ public List<VideoVo> getAllVideos() throws ParseException {
         return videoList1;
     }
 
+    @Override
+    public void deleteZipInformation(String zipName) {
+        Video video = new Video();
+        video.setVideoName(zipName);
+        videoMapper.delete(video);
+
+    }
 
 
     @Override

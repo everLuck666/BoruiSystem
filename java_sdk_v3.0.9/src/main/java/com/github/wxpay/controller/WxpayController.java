@@ -210,6 +210,15 @@ public class WxpayController {
            params.put("orderId",orderId);
            params.put("userId",userId);
            params.put("phone",phone);
+
+            if(!ordersService.isOrderFinish(orderId)){
+                ordersService.insertOrders(userId,orderId);
+                String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
+                System.out.println("message"+message);
+                smsSendService.sendSuccess(message,phone);
+                ordersService.finishOrder(orderId);
+            }
+            
             boolean flag = AlipaySignature.rsaCheckV1(params, alipayPublicKey, "UTF-8", "RSA2");
             if (flag) {
                 System.out.println("眼前成功");

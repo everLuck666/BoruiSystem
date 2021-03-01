@@ -17,4 +17,7 @@ public interface VideoService {
     void deleteVideo(String videoName);
 
     List<VideoVo> getAllZips() throws ParseException;
+
+    //删除固件记录
+    void deleteZipInformation(String zipName);
 }

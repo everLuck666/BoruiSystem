@@ -22,14 +22,16 @@
     update  users set version = #{version} where user_id = #{userId}
     </update>
 
-    <select id="getAllPeoplePhone" resultType="string">
-        select distinct phone from users
+    <select id="getAllPeoplePhone" resultType="net.seehope.pojo.bo.StoreSendBo">
+        select phone,user_name from users
         <where>
             <if test="subscribe != null and subscribe !=''" >
             and subscribe_status = #{subscribe}
             </if>
         </where>
+        group by user_name,phone
     </select>
+
 
 
 

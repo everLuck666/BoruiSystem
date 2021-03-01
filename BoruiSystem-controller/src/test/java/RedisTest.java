@@ -1,7 +1,9 @@
 import net.seehope.Application;
 import net.seehope.SmsSendService;
+import net.seehope.mapper.SendMapper;
 import net.seehope.mapper.UsersMapper;
 import net.seehope.pojo.Users;
+import net.seehope.pojo.bo.StoreSendBo;
 import net.seehope.util.SerializeUtil;
 import net.seehope.util.SmsUtils;
 import org.bouncycastle.crypto.tls.UserMappingType;
@@ -27,6 +29,9 @@ public class RedisTest {
     SmsSendService smsSendService;
     @Autowired
     UsersMapper usersMapper;
+
+    @Autowired
+    SendMapper sendMapper;
    @Test
     public void test(){
         redisTemplate.opsForValue().set("123", "23");
@@ -48,14 +53,14 @@ public class RedisTest {
 
         String message = SmsUtils.connect("code1",productName,"code2",deliveryName,"code3",deliveryId);
 
-        smsSendService.sendFlow(message,phone);
+       // smsSendService.sendFlow(message,phone);
     }
     //测试发送订阅短信
     @Test
     public void send(){
-        List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
-        String message = SmsUtils.connect("code1","你好呀");
-        smsSendService.sendAllPeople(message);
+//        List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
+//        String message = SmsUtils.connect("code1","你好呀");
+//        smsSendService.sendAllPeople(message);
     }
 
 
@@ -74,6 +79,28 @@ public class RedisTest {
        System.out.println(user2.getUserName());
     }
 
+   @Test
+    //测试短信存储
+    public void storeMessageTest(){
+        System.out.println(sendMapper.selectAll());
+    }
+
+    @Test
+    public void ts(){
+        List<StoreSendBo> usersList = usersMapper.getAllPeoplePhone("");
+        for (StoreSendBo storeSendBo:usersList){
+            System.out.println(storeSendBo.getPhone());
+            System.out.println(storeSendBo.getUserName());
+        }
+
+    }
+
+
+    //得到所有的通知记录
+@Test
+    public void getAllInformationTest(){
+        smsSendService.getAllInformatin();
+    }
 
 
 }

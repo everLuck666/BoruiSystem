@@ -92,6 +92,9 @@ public class LoginController {
     @PostMapping(value = "manager",produces="application/json;charset=UTF-8")
     public RestfulJson loginManger(@RequestBody ManagerBo bo){
         Users usrs = userService.getUserInfo(bo.getUsername());
+        if(usrs == null){
+            throw new RuntimeException("用户不存在");
+        }
         int version = Integer.valueOf(usrs.getVersion());
         version++;
         if(version == 1000){
