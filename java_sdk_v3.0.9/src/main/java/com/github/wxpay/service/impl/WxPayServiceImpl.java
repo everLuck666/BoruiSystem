@@ -88,6 +88,8 @@ public class WxPayServiceImpl implements WxPayService {
     @Override
     public void doWx(HttpServletRequest request, HttpServletResponse response, WeChatPayBo weChatPayBo) throws Exception {
         String number = request.getParameter("number") == null ? "" : request.getParameter("number");
+
+        System.out.println("lalall:"+weChatPayBo.getOrderId());
         // Productorder p = productorderService.findUniqueByProperty("number", number);
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -138,9 +140,11 @@ public class WxPayServiceImpl implements WxPayService {
                 // response.setContentType("image/JPEG");
                 MatrixToImageWriter.writeToStream(bitMatrix, format, response.getOutputStream());
 
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }

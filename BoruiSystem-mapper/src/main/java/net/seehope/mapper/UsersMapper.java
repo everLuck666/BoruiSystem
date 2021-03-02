@@ -1,6 +1,7 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.Users;
+import net.seehope.pojo.bo.StoreSendBo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface UsersMapper extends tk.mybatis.mapper.common.Mapper<Users> {
     //删除客户
     void deleteUser(String userId);
 
-    List<String> getAllPeoplePhone(@Param("subscribe") String  subscribe);
+
 }
 
 

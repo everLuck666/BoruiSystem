@@ -1,8 +1,10 @@
 import net.seehope.Application;
 import net.seehope.SmsSendService;
+import net.seehope.common.SmsConstant;
 import net.seehope.mapper.SendMapper;
 import net.seehope.mapper.UsersMapper;
 import net.seehope.pojo.Users;
+import net.seehope.pojo.bo.SmsBo;
 import net.seehope.pojo.bo.StoreSendBo;
 import net.seehope.util.SerializeUtil;
 import net.seehope.util.SmsUtils;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -58,9 +61,16 @@ public class RedisTest {
     //测试发送订阅短信
     @Test
     public void send(){
-//        List<String> usersList = usersMapper.getAllPeoplePhone("订阅");
+        List usersList = usersMapper.getAllPeoplePhone("订阅");
 //        String message = SmsUtils.connect("code1","你好呀");
-//        smsSendService.sendAllPeople(message);
+//        smsSendService.sendAllPeople(message,"123");
+
+        SmsBo smsBo = new SmsBo();
+        smsBo.setMessage("code1:nihao");
+        smsBo.setMobile("13025179492");
+        smsBo.setOrderId(UUID.randomUUID().toString());
+        smsBo.setTemplate(SmsConstant.newProductTemplate);
+        smsSendService.sendMessage(smsBo);
     }
 
 

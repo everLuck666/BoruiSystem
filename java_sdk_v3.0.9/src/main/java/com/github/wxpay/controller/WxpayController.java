@@ -9,13 +9,17 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.github.wxpay.service.AlipayService;
 import com.github.wxpay.service.WxPayService;
 import com.github.wxpay.vo.WxPayNotifyVO;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.seehope.OrdersService;
 import net.seehope.SmsSendService;
 
+import net.seehope.common.RestfulJson;
 import net.seehope.pojo.bo.PayBo;
 import net.seehope.pojo.bo.WeChatPayBo;
+import net.seehope.pojo.vo.PayVo;
 import net.seehope.util.SmsUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +54,10 @@ public class WxpayController {
 
 
 
-    @GetMapping(value = "/pay",produces="application/json;charset=UTF-8")
+    @PostMapping(value = "/pay",produces="application/json;charset=UTF-8")
     @ResponseBody
-    public Map<String, String> pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
+    @ApiOperation("生成预处理订单号")
+    public RestfulJson pay(HttpServletRequest request, HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
         System.out.println("我进来了");
        // System.out.println("token是"+token);
         //itemService.isCanBug(userOrderInformationBo.getSpecies());//判断门票是否可以买
@@ -62,6 +67,7 @@ public class WxpayController {
         PayBo payBo = new PayBo();
 
         String email = jsonObject.getString("email");
+        payBo.setEmail(email);
         payBo.setAddress(jsonObject.getString("address"));
         payBo.setEmail(jsonObject.getString("email"));
         payBo.setNote(jsonObject.getString("note"));
@@ -77,8 +83,8 @@ public class WxpayController {
         payBo.setInvoiceFlag(jsonObject.getString("invoiceFlag"));//是否需要发票
         payBo.setInvoiceType(jsonObject.getString("invoiceType"));
         payBo.setNote(jsonObject.getString("remark"));//备注
-
         String payType = jsonObject.getString("payType");
+
 
 
 
@@ -135,14 +141,29 @@ public class WxpayController {
         weChatPayBo.setUserId(userId);
         System.out.println(stringBuffer.toString().substring(0,stringBuffer.length()-1));
         weChatPayBo.setProductNames(stringBuffer.toString().substring(0,stringBuffer.length()-1));
-        if(payType.equals("微信")){
+        weChatPayBo.setPayType(payType);
+
+        return RestfulJson.isOk(weChatPayBo);
+
+    }
+
+
+    @PostMapping(value = "realPay",produces="application/json;charset=UTF-8")
+    @ApiOperation("生成二维码,把预处理返回的结果全部返回")
+    public void payProcess(@RequestBody WeChatPayBo weChatPayBo,HttpServletRequest request,HttpServletResponse response) throws Exception {
+        String payType = weChatPayBo.getPayType();
+        if(StringUtils.equals(payType,"微信")){
             wxPayService.doWx(request,response,weChatPayBo);
         }else{
-           alipayService.alipay(response,weChatPayBo);
+            alipayService.alipay(response,weChatPayBo);
         }
 
+    }
 
-        return null;
+    @GetMapping(value = "inquiryPay",produces="application/json;charset=UTF-8")
+    @ApiOperation("咨询订单是否完成")
+    public RestfulJson inquiryOrder(String orderId){
+        return RestfulJson.isOk(ordersService.isOrderFinish(orderId));
     }
 
     @RequestMapping(value = "/success", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -170,7 +191,7 @@ public class WxpayController {
                String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
                 System.out.println("message"+message);
                 smsSendService.sendSuccess(message,phone);
-                ordersService.finishOrder(orderId);
+                //ordersService.finishOrder(orderId);
             }
 
         }
@@ -224,7 +245,7 @@ public class WxpayController {
                     String message =  SmsUtils.connect("code1",productNames,"code2",orderId);
                     System.out.println("message"+message);
                     smsSendService.sendSuccess(message,phone);
-                    ordersService.finishOrder(orderId);
+                   // ordersService.finishOrder(orderId);
                 }
 
                 log.info("支付宝通知更改状态成功！");
@@ -347,6 +368,9 @@ public class WxpayController {
 //        return WXPayUtil.mapToXml(return_data);
 //    }
 //
+
+
+
 
 
 

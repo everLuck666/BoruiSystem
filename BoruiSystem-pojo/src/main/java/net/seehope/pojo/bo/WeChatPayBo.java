@@ -13,6 +13,16 @@ public class WeChatPayBo {
 
     private String userId;
 
+    private String payType;
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
     public String getUserId() {
         return userId;
     }

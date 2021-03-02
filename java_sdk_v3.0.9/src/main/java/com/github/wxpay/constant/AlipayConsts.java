@@ -10,7 +10,7 @@ public class AlipayConsts {
 
 
                                                    //支付宝支付成功的回调地址
-    public final  static  String SUCCESS_NOTIFY2 = "http://borui.test.utools.club/wxPay/alinotify";
+    public final  static  String SUCCESS_NOTIFY2 = "http://borui.cn.utools.club/wxPay/alinotify";
 
     public static class Status {
         public final static int MachineOrderInit = 0;        //未支付

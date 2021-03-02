@@ -125,7 +125,7 @@ public class SmsSendServiceImpl implements SmsSendService {
             smsBo.setMobile(storeSendBo.getPhone());
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
-          //  sendMessage(smsBo);
+            sendMessage(smsBo);
         }
         Send send  = new Send();
         String messageStorage = "尊敬的客户您好！感谢您对本公司的信任，我司新品"+message.split(":")[1]+" 即将上市，诚邀您体验新品！退订回T";
@@ -151,7 +151,7 @@ public class SmsSendServiceImpl implements SmsSendService {
             smsBo.setMobile(storeSendBo.getPhone());
             smsBo.setOrderId(UUID.randomUUID().toString());
             smsBo.setTemplate(SmsConstant.newProductTemplate);
-          //  sendMessage(smsBo);
+            sendMessage(smsBo);
         }
 
 

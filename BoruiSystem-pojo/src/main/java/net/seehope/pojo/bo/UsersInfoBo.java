@@ -12,4 +12,6 @@ public class UsersInfoBo {
     private String productName;
     private Double orderAmout;
     private String userId;
+
+
 }

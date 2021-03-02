@@ -5,7 +5,7 @@
 <mapper namespace="net.seehope.mapper.UsersMapper">
 
     <select id="queryUserInfos" resultMap="users">
-        select * from users_info,users where user_info.userId=users.userId and users.version!='2'
+        select * from users_info,users where users_info.user_id=users.user_id and users.version!='2'
     </select>
 
     <resultMap id="users" type="net.seehope.pojo.bo.UsersInfoBo">
