@@ -100,13 +100,23 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public void deleteFile(String fileName, String path) {
         File tempFile = new File(FilePath.path);
-        File dest = new File(tempFile.getAbsolutePath() + path + fileName);
-
-        if (dest != null) {
-            logger.info("开始删除"+fileName);
-            dest.delete();
-        } else {
-            logger.warn("请注意要删除的文件不存在");
+        File dest = new File(tempFile.getAbsolutePath() + path);
+        File[] tempFiles = dest.listFiles();
+        for(int i = 0;i < tempFiles.length;i++){
+            System.out.println(tempFiles[i].getName());
+            if(tempFiles[i].getName().startsWith(fileName)||tempFiles[i].getName().endsWith(fileName)){
+                tempFiles[i].delete();
+            }
         }
+
+
+       // File dest = new File(tempFile.getAbsolutePath() + path + fileName);
+//
+//        if (dest != null) {
+//            logger.info("开始删除"+fileName);
+//            dest.delete();
+//        } else {
+//            logger.warn("请注意要删除的文件不存在");
+//        }
     }
 }

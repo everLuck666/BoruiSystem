@@ -26,6 +26,7 @@
                 AND order_id=#{orderId}
             </if>
         </where>
+        ORDER BY order_time DESC
     </select>
 
     <resultMap id="orders2" type="net.seehope.pojo.bo.OrdersInfoBo">
@@ -38,7 +39,7 @@
         <result column="order_amout" property="orderAmout"></result>
         <result column="order_time" property="orderTime"></result>
         <result column="remark" property="remark"></result>
-        <result column="invoices_type" property="invoicesType"></result>
+        <result column="invoice_type" property="invoicesType"></result>
         <result column="status" property="status"></result>
         <result column="email" property="email"></result>
     </resultMap>
@@ -69,7 +70,7 @@
         <result column="product_price" property="productPrice"></result>
     </resultMap>
 
-    <select id="querySales" parameterType="String" resultType="Integer">
+    <select id="querySales"  resultType="Integer">
         select SUM(product_number) from sales_statistics where product_name=#{productName}
         and order_time between #{todays} and #{todaye}
     </select>

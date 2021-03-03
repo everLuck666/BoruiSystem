@@ -13,7 +13,7 @@
 
     <select id="getAllZip" resultType="net.seehope.pojo.Video">
     select videoName,path,describeStatic,createTime from video where path like
-    "%.zip" or path like "%.zop"
+    "%.zip" or path like "%.rar"
 </select>
 
 </mapper>

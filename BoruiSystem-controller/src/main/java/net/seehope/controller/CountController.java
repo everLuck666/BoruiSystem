@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import net.seehope.CountService;
 import net.seehope.common.RestfulJson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("count")
+@CrossOrigin(origins = "*",maxAge = 3600)
 @Api("统计人数")
 public class CountController {
     @Autowired

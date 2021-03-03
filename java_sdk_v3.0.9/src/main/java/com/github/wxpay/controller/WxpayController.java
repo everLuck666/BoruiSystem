@@ -33,6 +33,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("wxPay")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class WxpayController {
 
     private static final String APPID = "wx22b4e8dc67f0ea0c";

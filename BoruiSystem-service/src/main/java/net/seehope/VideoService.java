@@ -20,4 +20,7 @@ public interface VideoService {
 
     //删除固件记录
     void deleteZipInformation(String zipName);
+
+    //判断是否包含这个固件的名字
+    boolean isContain(String zipName);
 }

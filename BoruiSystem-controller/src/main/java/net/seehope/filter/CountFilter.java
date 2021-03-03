@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +40,22 @@ public class CountFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         ServletContext context = filterConfig.getServletContext();
         Map<String, Integer> ipMap = (Map<String, Integer>) context.getAttribute("ipMap");
-        String ip = request.getRemoteAddr();
+        // 获取请求ip地址
+        HttpServletRequest req = (HttpServletRequest)request;
+        String ip = req.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = req.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = req.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = req.getRemoteAddr();
+        }
+        if (ip.indexOf(",") != -1) {
+            String[] ips = ip.split(",");
+            ip = ips[0].trim();
+        }
         System.out.println("---------------------");
         System.out.println("ip:"+ip);
         System.out.println("-------------------------");

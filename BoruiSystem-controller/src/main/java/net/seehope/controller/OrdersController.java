@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 
 
 @RestController
 @Api(tags="后台订单管理接口",value = "OrdersController")
 @RequestMapping("orders")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class OrdersController {
 
     @Autowired
@@ -77,8 +79,11 @@ public class OrdersController {
     @ApiOperation("修改订单状态")
     @ApiImplicitParam(name = "orderId",value = "订单号",dataType = "String")
     @PostMapping(value = "updateOrder",produces="application/json;charset=UTF-8")
-    public RestfulJson updateOrder(String orderId){
-        ordersService.updateOrder(orderId);
+    public RestfulJson updateOrder(@RequestBody Map map ){
+        String orderId = map.get("orderId").toString();
+        String productName = map.get("productName").toString();
+
+        ordersService.updateOrder(orderId,productName);
         return RestfulJson.isOk("发货成功");
     }
 

@@ -28,6 +28,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("sms")
 @Api("发送短息")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class SmsController {
 
     @Autowired

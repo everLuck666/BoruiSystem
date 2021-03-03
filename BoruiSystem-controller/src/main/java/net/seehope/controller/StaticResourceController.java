@@ -25,7 +25,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/file")
 @Api(tags = "静态资源上传",value = "StaticResourceController")
-
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class StaticResourceController {
     @Autowired
     VideoService videoService;
@@ -86,6 +86,10 @@ public class StaticResourceController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         File tempFile = new File(FilePath.path);
         String path = FilePath.video;
+        if(videoService.isContain(videoName)){
+            throw new RuntimeException("这个固件名字已经被使用");
+        }
+
         String fileName = indexService.update(files, path);
         String[] suffix = fileName.split("\\.");
 
@@ -124,11 +128,18 @@ public class StaticResourceController {
         File tempFile = new File(FilePath.path);
         String path = FilePath.zip;
 
-        if(StringUtils.equals("地面站",zipName)){
-            indexService.deleteFile(zipName,path);
-            videoService.deleteZipInformation(zipName);
-        }
-        String fileName = indexService.update(files, path);
+        String fileName = null;
+            if(StringUtils.equals("地面站",zipName)){
+                indexService.deleteFile(zipName,path);
+                videoService.deleteZipInformation(zipName);
+            }
+
+            if(videoService.isContain(zipName)){
+                throw new RuntimeException("这个固件名字已经被使用");
+            }
+
+
+        fileName = indexService.update(files, path);
         String[] suffix = fileName.split("\\.");
 
         if(fileName == null){
@@ -162,8 +173,5 @@ public class StaticResourceController {
         videoService.deleteVideo(videoName);
         return RestfulJson.isOk("删除成功");
     }
-
-
-
-
+    
 }

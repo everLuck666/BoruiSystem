@@ -143,8 +143,8 @@ public class UserServiceImpl implements UserService {
     private InputStream export (List < UsersInfoBo > list) {
         logger.info(">>>>>>>>>>>>>>>>>>>>开始进入导出方法>>>>>>>>>>");
         Map<String, String> map = new HashMap();
-        map.put("0", "否");
-        map.put("1", "是");
+        map.put("false", "否");
+        map.put("true", "是");
         ByteArrayOutputStream output = null;
         InputStream inputStream1 = null;
         SXSSFWorkbook wb = new SXSSFWorkbook(1000);// 保留1000条数据在内存中

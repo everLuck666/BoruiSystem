@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @Api(tags="后台商品管理接口",value = "GoodsController")
 @RequestMapping("goods")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class GoodsController {
 
     @Autowired

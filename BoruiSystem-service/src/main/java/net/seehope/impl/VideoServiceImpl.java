@@ -70,6 +70,18 @@ public List<VideoVo> getAllVideos() throws ParseException {
 
     }
 
+    @Override
+    public boolean isContain(String zipName) {
+        Video video = new Video();
+        video.setVideoName(zipName);
+        Video value = videoMapper.selectOne(video);
+        if(value != null){
+            return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public void addVideo(Video video) {

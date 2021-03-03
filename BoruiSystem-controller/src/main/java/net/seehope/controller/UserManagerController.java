@@ -16,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @Api(tags = "管理员管理",value = "UserManagerController")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class UserManagerController {
     @Autowired
     UserService userService;

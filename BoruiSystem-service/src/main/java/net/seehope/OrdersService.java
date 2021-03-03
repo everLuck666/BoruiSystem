@@ -31,7 +31,7 @@ public interface OrdersService {
     PageInfo getAllOrders(GetOrdersBo ordersBo);
 
     //将订单状态修改为发货
-    void updateOrder(String orderId);
+    void updateOrder(String orderId,String productName);
 
     //查看发票
     Invoices getInvoices(String orderId);

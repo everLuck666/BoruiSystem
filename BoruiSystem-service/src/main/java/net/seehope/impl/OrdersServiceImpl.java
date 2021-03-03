@@ -109,8 +109,8 @@ public class OrdersServiceImpl implements OrdersService {
 
         List<GoodsInfoBo> goods = ordersMapper.getProductInfo();
         for (GoodsInfoBo good:goods){
-            Integer today = ordersMapper.querySales(good.getProductName(),String.valueOf(todays),String.valueOf(todaye));
-            Integer month = ordersMapper.querySales(good.getProductName(),String.valueOf(days),String.valueOf(datee));
+            Integer today = ordersMapper.querySales(good.getProductName(),new Date(todays),new Date(todaye));
+            Integer month = ordersMapper.querySales(good.getProductName(),dates,datee);
             Integer total = ordersMapper.queryTotalSales(good.getProductName());
             SalesStatisticBo salesStatisticBo = new SalesStatisticBo();
             salesStatisticBo.setProductName(good.getProductName());
@@ -180,9 +180,10 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public void updateOrder(String orderId) {
+    public void updateOrder(String orderId,String productName) {
         Orders orders = new Orders();
         orders.setOrderId(orderId);
+        orders.setProductName(productName);
         Orders orders1 = ordersMapper.selectOne(orders);
         ordersMapper.delete(orders);
         orders1.setStatus("1");
@@ -531,7 +532,7 @@ public class OrdersServiceImpl implements OrdersService {
             totalPrice += priceTemp;
 
             orders.setOrderAmout(priceTemp+"");
-            orders.setInvoiceType(payBo.getInvoiceTitle());//发票类型
+            orders.setInvoiceType(payBo.getInvoiceType());//发票类型
             orders.setRemark(payBo.getNote());//客户的备注
             orders.setStatus(SendStatus.UNSEND.getStatus()+"");//发货未发货
             orders.setUserId(userId);
@@ -540,7 +541,7 @@ public class OrdersServiceImpl implements OrdersService {
 
             Orders od = (Orders)redisTemplate.opsForValue().get(orderId);
             if (null == od){
-                redisTemplate.opsForValue().set(orderId,orders,Duration.ofMinutes(30L));
+                redisTemplate.opsForValue().set(orderId+UUID.randomUUID(),orders,Duration.ofMinutes(30L));
             }
 //            orders.setOrderAmout(priceTemp+"");
 //            orders.setInvoiceType(payBo.getInvoiceTitle());//发票类型
@@ -552,7 +553,9 @@ public class OrdersServiceImpl implements OrdersService {
 //            ordersMapper.insert(orders);
         }
 
-        if(payBo.getInvoiceFlag().equals("需要发票"))    {
+        if(!payBo.getInvoiceType().equals("2")){
+
+            System.out.println("开始生成发票");
             Invoices invoices = new Invoices();
             invoices.setAccout(payBo.getAccount());
             invoices.setBank(payBo.getBank());
@@ -565,7 +568,8 @@ public class OrdersServiceImpl implements OrdersService {
 //                invoicesMapper.insert(invoices);
 //            }
             Invoices invo = (Invoices)redisTemplate.opsForValue().get(userId+orderId);
-            if (null == null){
+            if (invo == null){
+                System.out.println("真的开始插入redisl ");
                 redisTemplate.opsForValue().set(userId+orderId,invoices,Duration.ofMinutes(30L));
             }
 
@@ -587,12 +591,16 @@ public class OrdersServiceImpl implements OrdersService {
         if (null != users){
             usersMapper.insert(users);
         }
-        Orders orders = (Orders)redisTemplate.opsForValue().get(orderId);
-        if (null != orders){
-            ordersMapper.insert(orders);
+
+        Set<String> set = redisTemplate.keys(orderId+"*");
+        List<Orders> valueList = redisTemplate.opsForValue().multiGet(set);
+        for(Orders orderIds:valueList){
+                ordersMapper.insert(orderIds);
         }
+
         Invoices invoices = (Invoices)redisTemplate.opsForValue().get(userId+orderId);
         if (null != invoices){
+            System.out.println("发票插入数据库");
             invoicesMapper.insert(invoices);
         }
     }

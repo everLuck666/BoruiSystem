@@ -42,7 +42,11 @@ public class CountServiceImpl implements CountService {
     @Override
     public int getAllPeople() {
         List<CountPeople> countPeopleList = countPeopleMapper.selectAll();
-        return countPeopleList.size();
+        int sum = 0;
+        for(CountPeople countPeople:countPeopleList){
+            sum += Integer.parseInt(countPeople.getCount());
+        }
+        return sum;
     }
 
     @Override
