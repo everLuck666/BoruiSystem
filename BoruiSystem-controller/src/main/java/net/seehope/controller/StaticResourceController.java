@@ -7,10 +7,15 @@ import net.seehope.common.FilePath;
 import net.seehope.common.RestfulJson;
 import net.seehope.pojo.Video;
 import net.seehope.task.MyTask;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.eclipse.jetty.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -21,6 +26,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 @RestController
 @RequestMapping("/file")
@@ -172,6 +178,26 @@ public class StaticResourceController {
         String videoName = map.get("videoName").toString();
         videoService.deleteVideo(videoName);
         return RestfulJson.isOk("删除成功");
+    }
+
+
+    @GetMapping("download/{fileName:.+}")
+    @ApiOperation("下载文件，需要传递文件的文件名字在访问地址中")
+    public ResponseEntity downLoadFile(@PathVariable("fileName") String fileName) throws IOException {
+        System.out.println("fileName"+fileName);
+        File file = new File(FilePath.path);
+
+        String path = FilePath.zip;
+
+        File zipFile = new File(file.getAbsolutePath()+path+fileName);
+
+        HttpHeaders headers = new HttpHeaders();
+        //二进制流数据
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        //通知浏览器以attachment(下载方式)下载文件，文件名称为指定名称
+        headers.setContentDispositionFormData("attachment",fileName);
+        byte[] bytes = FileUtils.readFileToByteArray(zipFile);
+        return new ResponseEntity<byte[]>(bytes,headers, HttpStatus.CREATED);
     }
     
 }
