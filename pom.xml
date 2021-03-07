@@ -69,14 +69,38 @@
         <module>BoruiSystem-service</module>
         <module>BoruiSystem-common</module>
         <module>BoruiSystem-configuration</module>
+        <module>alipay-sdk-master</module>
+        <module>java_sdk_v3.0.9</module>
     </modules>
+
 
 
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <fork>true</fork>-->
+<!--                    <mainClass>net.seehope.Application</mainClass>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+
+<!--            </plugin>-->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.5.3.RELEASE</version>
+                <configuration>
+                    <mainClass>net.seehope.Application</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -84,10 +108,6 @@
                         </goals>
                     </execution>
                 </executions>
-
-                <configuration>
-                    <mainClass>net.seehope.Application</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>

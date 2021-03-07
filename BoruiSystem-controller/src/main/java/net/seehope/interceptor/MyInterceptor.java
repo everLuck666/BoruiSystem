@@ -38,8 +38,15 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+
+
+
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
+        if("OPTIONS".equals(request.getMethod().toUpperCase())) {
+            System.out.println("Method:OPTIONS");
+            return true;
+        }
         PrintWriter out = null;
         logger.info("request请求地址path：" + request.getServletPath());
         //从请求头获取token

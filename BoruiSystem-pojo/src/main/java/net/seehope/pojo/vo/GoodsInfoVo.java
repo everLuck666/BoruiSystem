@@ -3,7 +3,7 @@ package net.seehope.pojo.vo;
 public class GoodsInfoVo {
     private String productName;
     private String describe;
-    private Double productPrice;
+    private Integer productPrice;
     private String status;
 
     public String getProductName() {
@@ -22,11 +22,11 @@ public class GoodsInfoVo {
         this.describe = describe;
     }
 
-    public Double getProductPrice() {
+    public Integer getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Double productPrice) {
+    public void setProductPrice(Integer productPrice) {
         this.productPrice = productPrice;
     }
 

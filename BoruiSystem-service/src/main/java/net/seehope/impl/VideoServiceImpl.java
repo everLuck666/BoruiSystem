@@ -37,6 +37,7 @@ public List<VideoVo> getAllVideos() throws ParseException {
             String createTime = simpleDateFormat.format(date).toString();
             videoVo.setCreateTime(createTime);
             videoVo.setPath(video.getPath());
+            videoVo.setDescirbe(video.getDescribestatic());
             videoVo.setVideoName(video.getVideoName());
             videoList1.add(videoVo);
         }

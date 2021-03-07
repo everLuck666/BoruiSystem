@@ -14,6 +14,6 @@ public class WechatConstant {
     public final static String SECRET = "c4f4acaa0a2015ae3083fd8dda3b34b6"; // 写⾃⼰的SECRET
 
     //微信支付成功的回调地址
-    public final  static  String SUCCESS_NOTIFY = "http://borui.cn.utools.club/wxPay/success";
+    public final  static  String SUCCESS_NOTIFY = "http://8.129.181.245:8888/wxPay/success";
 
 }

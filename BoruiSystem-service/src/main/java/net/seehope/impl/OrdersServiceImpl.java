@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.seehope.IndexService;
 import net.seehope.OrdersService;
-import net.seehope.common.GoodsStatus;
-import net.seehope.common.OrderType;
-import net.seehope.common.SendStatus;
-import net.seehope.common.UserType;
+import net.seehope.common.*;
 import net.seehope.mapper.GoodsMapper;
 import net.seehope.mapper.InvoicesMapper;
 import net.seehope.mapper.OrdersMapper;
@@ -519,6 +516,9 @@ public class OrdersServiceImpl implements OrdersService {
        String orderId = UUID.randomUUID().toString().replace("-","");
        int totalPrice = 0;
 
+       //发票类型
+        String invoiceType = payBo.getInvoiceType();
+
         while (iterator.hasNext()){
 
             Map.Entry<String, String> entry = iterator.next();
@@ -528,7 +528,7 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setOrderId(orderId);
             orders.setProductName(productId);
             orders.setProductNumber(num);
-            int priceTemp = getPrice(productId,num);
+            int priceTemp = getPrice(productId,num,invoiceType);
             totalPrice += priceTemp;
 
             orders.setOrderAmout(priceTemp+"");
@@ -552,6 +552,8 @@ public class OrdersServiceImpl implements OrdersService {
 //            orders.setOrderTime(new Date());
 //            ordersMapper.insert(orders);
         }
+
+
 
         if(!payBo.getInvoiceType().equals("2")){
 
@@ -606,7 +608,7 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public int getPrice(String goodName, String num) {
+    public int getPrice(String goodName, String num,String invoiceType) {
         Goods goods = new Goods();
         goods.setProductName(goodName);
         Goods goodsValue = goodsMapper.selectOne(goods);
@@ -616,7 +618,15 @@ public class OrdersServiceImpl implements OrdersService {
         if(StringUtils.equals(goodsValue.getStatus(), GoodsStatus.OFF.getStatus()+"")){
             throw new RuntimeException("这个商品已经下架");
         }
+
+
         int price = Integer.parseInt(goodsValue.getProductPrice())*Integer.parseInt(num);
+       if(invoiceType.equals(InvoiceStatus.COMMONINVOIVE.getType())){
+           price *= 1.06;
+       }else if(invoiceType.equals(InvoiceStatus.SPECIALINVOICE.getType())){
+           price *= 1.1;
+       }
+
         return price;
     }
 

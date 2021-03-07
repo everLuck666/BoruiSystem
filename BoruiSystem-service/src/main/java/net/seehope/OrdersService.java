@@ -66,7 +66,7 @@ public interface OrdersService {
 //形成预处理订单,返回需要付钱的金额
     String[] pretreatment(PayBo payBo);
     //返回根据商品和商品的数量返回价格
-    int getPrice(String goodName,String num);
+    int getPrice(String goodName,String num,String invoiceType);
 
     //把预处理生成的订单改成已经支付完成的状态
     void finishOrder(String orderId);

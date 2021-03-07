@@ -46,7 +46,7 @@ public class GoodsController {
         Goods goods = new Goods();
         goods.setProductName(goodsInfoVo.getProductName());
         goods.setDescribe(goodsInfoVo.getDescribe());
-        goods.setProductPrice(String.valueOf(goodsInfoVo.getProductPrice()));
+        goods.setProductPrice(String.valueOf(goodsInfoVo.getProductPrice()*100));
         goods.setImageUrl(fileName);
         System.out.println("商品状态----" + goodsInfoVo.getStatus());
         goods.setStatus(goodsInfoVo.getStatus());

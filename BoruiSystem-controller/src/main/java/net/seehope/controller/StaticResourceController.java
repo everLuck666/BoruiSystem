@@ -195,7 +195,9 @@ public class StaticResourceController {
         //二进制流数据
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         //通知浏览器以attachment(下载方式)下载文件，文件名称为指定名称
-        headers.setContentDispositionFormData("attachment",fileName);
+        //headers.setContentDispositionFormData("attachment",fileName);
+
+        headers.setContentDispositionFormData("attachment", fileName=java.net.URLEncoder.encode(fileName, "UTF-8"));
         byte[] bytes = FileUtils.readFileToByteArray(zipFile);
         return new ResponseEntity<byte[]>(bytes,headers, HttpStatus.CREATED);
     }

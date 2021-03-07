@@ -73,9 +73,27 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         //后台
         List includePathLists = new ArrayList();
-        includePathLists.add("/sms/sms");
+        List excludePathList = new ArrayList();
+        excludePathList.add("/count/count");
+        excludePathList.add("/user/manager");
+//        excludePathList.add("/wxPay/success");
+//        excludePathList.add("/wxPay/alinotify");
+        excludePathList.add("/wxPay/**");
+        
+        excludePathList.add("/file/download/*");
+        excludePathList.add("/goods/goods");
+        excludePathList.add("/file/download/**");
+        includePathLists.add("/count/**");
+        includePathLists.add("/goods/**");
+        includePathLists.add("/orders/**");
+        includePathLists.add("/sms/**");
+        includePathLists.add("/file/**");
+        includePathLists.add("/user/**");
+        includePathLists.add("/users/**");
+
         registry.addInterceptor(new MyInterceptor(new String[]{UserType.SUPERMANAGER.getType() + ""}, "不是管理员token", userService))
-                .addPathPatterns(includePathLists);
+                .addPathPatterns(includePathLists)
+        .excludePathPatterns(excludePathList);
 //
 //
 //        //拦截学生
