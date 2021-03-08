@@ -1,6 +1,7 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.Invoices;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 * @author mapper-generator
 */
 @Repository
+@CacheNamespace
 public interface InvoicesMapper extends tk.mybatis.mapper.common.Mapper<Invoices> {
 
 }

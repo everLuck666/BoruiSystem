@@ -12,7 +12,7 @@
         select * from finished_orders
     </select>
 
-    <select id="queryAllOrders" resultMap="orders">
+    <select id="queryAllOrders" resultMap="orders2">
         select * from orders_info
     </select>
 

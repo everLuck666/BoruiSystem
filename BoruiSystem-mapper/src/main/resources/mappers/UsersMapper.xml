@@ -19,7 +19,7 @@
         <result column="user_id" property="userId"></result>
     </resultMap>
 
-    <update id="updateVersion"  parameterType="String">
+    <update id="updateVersion"  parameterType="String" flushCache="true">
     update  users set version = #{version} where user_id = #{userId}
     </update>
 
@@ -35,6 +35,10 @@
             </if>
         </where>
         group by user_name,phone
+    </select>
+
+    <select id="getUser" resultType="net.seehope.pojo.Users" flushCache="true" useCache="false">
+        select * from users where user_id = #{userId}
     </select>
 
 

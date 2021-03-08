@@ -48,6 +48,8 @@ public class UserServiceImpl implements UserService {
         Users users = new Users();
         users.setUserId(sno);
         Users userValue = usersMapper.selectOne(users);
+
+      //  Users userValue = usersMapper.getUser(sno);
         if (userValue != null) {
             return userValue;
         }

@@ -82,6 +82,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
         
         excludePathList.add("/file/download/*");
         excludePathList.add("/goods/goods");
+        excludePathList.add("/file/video2");
+        excludePathList.add("/file/zip");
         excludePathList.add("/file/download/**");
         includePathLists.add("/count/**");
         includePathLists.add("/goods/**");

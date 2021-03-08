@@ -1,5 +1,6 @@
 import net.seehope.Application;
 import net.seehope.SmsSendService;
+import net.seehope.UserService;
 import net.seehope.common.SmsConstant;
 import net.seehope.mapper.SendMapper;
 import net.seehope.mapper.UsersMapper;
@@ -35,6 +36,8 @@ public class RedisTest {
 
     @Autowired
     SendMapper sendMapper;
+    @Autowired
+    UserService userService;
    @Test
     public void test(){
         redisTemplate.opsForValue().set("123", "23");
@@ -110,6 +113,24 @@ public class RedisTest {
 @Test
     public void getAllInformationTest(){
         smsSendService.getAllInformatin();
+    smsSendService.getAllInformatin();
+    }
+
+    //测试mybatis二级缓存
+    @Test
+    public void mybatisTest(){
+        userService.updateVersion(2+"","123456");//版本号+1
+
+        Users users = userService.getUserInfo("123456");
+        System.out.println("----------------------------");
+        userService.updateVersion(3+"","123456");//版本号+1
+
+        Users user2s = userService.getUserInfo("123456");
+        System.out.println("------------------");
+        System.out.println(user2s.getVersion());
+
+
+
     }
 
 

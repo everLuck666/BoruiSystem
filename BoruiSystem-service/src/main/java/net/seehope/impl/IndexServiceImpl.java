@@ -27,6 +27,8 @@ public class IndexServiceImpl implements IndexService {
             }
             fileName = file.getOriginalFilename();
 
+
+
             File dest = new File(tempFile.getAbsolutePath() + path + fileName);
             if (dest.exists()) {
                 String[] photo = fileName.split("\\.");
@@ -56,8 +58,17 @@ public class IndexServiceImpl implements IndexService {
 
         File tempFile = new File("BoruiSystem-controller");
 
-
         File oldFile = new File(tempFile.getAbsolutePath()+path+"/"+oldName);
+
+        String[] newNameArray = newName.split("\\.");
+
+        if(newNameArray[0].equals("地面站")&& !newNameArray[1].equals("zip")){
+            oldFile.delete();
+            throw new RuntimeException("地面站只能是zip格式");
+        }
+
+
+
 
         File newFile = new File(tempFile.getAbsolutePath()+path+"/"+newName);
 

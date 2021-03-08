@@ -1,6 +1,7 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.Video;
+import org.apache.ibatis.annotations.CacheNamespace;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
 *
 * @author mapper-generator
 */
+@CacheNamespace
 public interface VideoMapper extends tk.mybatis.mapper.common.Mapper<Video> {
     List<Video> getAllVideo();
 

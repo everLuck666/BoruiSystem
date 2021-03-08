@@ -1,6 +1,7 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.CountPeople;
+import org.apache.ibatis.annotations.CacheNamespace;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 *
 * @author mapper-generator
 */
+@CacheNamespace
 public interface CountPeopleMapper extends tk.mybatis.mapper.common.Mapper<CountPeople> {
 
     //得到订单表中的最小日期

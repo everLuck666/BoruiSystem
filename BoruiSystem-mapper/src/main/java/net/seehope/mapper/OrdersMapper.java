@@ -1,6 +1,7 @@
 package net.seehope.mapper;
 
 import net.seehope.pojo.Orders;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.util.List;
 * @author mapper-generator
 */
 @Repository
+@CacheNamespace
 public interface OrdersMapper extends tk.mybatis.mapper.common.Mapper<Orders> {
 
     //返回待处理订单数量

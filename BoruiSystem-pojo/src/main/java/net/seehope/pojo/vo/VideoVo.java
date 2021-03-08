@@ -6,7 +6,7 @@ public class VideoVo {
 
 
     private String path;
-    private String descirbe;
+    private String describe;
     private String createTime;
 
     public String getVideoName() {
@@ -34,11 +34,11 @@ public class VideoVo {
     }
 
 
-    public String getDescirbe() {
-        return descirbe;
+    public String getDescribe() {
+        return describe;
     }
 
-    public void setDescirbe(String descirbe) {
-        this.descirbe = descirbe;
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 }

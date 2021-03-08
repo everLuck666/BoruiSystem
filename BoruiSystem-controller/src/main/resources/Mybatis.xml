@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+<dependencies>
+    <statements>
+        <statement id="com.louis.mybatis.dao.DepartmentsMapper.updateByPrimaryKey">
+            <observer id="com.louis.mybatis.dao.EmployeesMapper.selectWithDepartments" />
+        </statement>
+    </statements>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin interceptor="org.luanlouis.mybatis.plugin.cache.EnhancedCachingExecutor">
+            <property name="dependency" value="dependencys.xml"/>
+            <property name="cacheEnabled" value="true"/>
+        </plugin>
+    </plugins>
+</build>
+
+
+    </configuration>

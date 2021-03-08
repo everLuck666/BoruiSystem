@@ -254,7 +254,7 @@ public class OrdersServiceImpl implements OrdersService {
                 "收货地址","订单总额","下单时间","备注信息","发票","状态"};
 
         // 字段名所在表格的宽度
-        int[] ints = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000};
+        int[] ints = new int[] { 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000};
 
         // 设置表头样式
         ExcelFormatUtil.initTitleEX(sheet, header, strs, ints);
