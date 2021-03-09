@@ -62,10 +62,10 @@ public class IndexServiceImpl implements IndexService {
 
         String[] newNameArray = newName.split("\\.");
 
-//        if(newNameArray[0].equals("地面站")&& !newNameArray[1].equals("zip")){
-//            oldFile.delete();
-//            throw new RuntimeException("地面站只能是zip格式");
-//        }
+        if(newNameArray[0].equals("地面站")&& !newNameArray[1].equals("zip")){
+            oldFile.delete();
+            throw new RuntimeException("地面站只能是zip格式");
+        }
 
 
 

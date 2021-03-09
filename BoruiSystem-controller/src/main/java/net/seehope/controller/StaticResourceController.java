@@ -228,10 +228,11 @@ public class StaticResourceController {
         String path = FilePath.zip;
 
         String fileName = null;
-//        if(StringUtils.equals("地面站",zipName)){
-//            indexService.deleteFile(zipName,path);
-//            videoService.deleteZipInformation(zipName);
-//        }
+
+        if(StringUtils.equals("地面站",zipName)){
+            indexService.deleteFile(zipName,path);
+            videoService.deleteZipInformation(zipName);
+        }
 
         if(videoService.isContain(zipName)){
             throw new RuntimeException("这个固件名字已经被使用");
