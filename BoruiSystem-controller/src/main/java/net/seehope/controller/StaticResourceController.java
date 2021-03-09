@@ -82,48 +82,141 @@ public class StaticResourceController {
         return RestfulJson.isOk(videoService.getAllZips());
     }
     //上传视频
-    @PutMapping(value = "video",produces="application/json;charset=UTF-8")
+    @PostMapping(value = "video",produces="application/json;charset=UTF-8")
     @ApiOperation(value = "上传视频",notes = "file字段对应的是视频")
-    public RestfulJson updateVideo(HttpServletRequest request, @ApiParam(name = "videoName",value = "视频的名字") String videoName,@ApiParam(name = "describe",value = "文件的描述") String descirbe) throws IOException {
+    public RestfulJson updateVideo(HttpServletRequest request, @ApiParam(name = "videoName",value = "视频的名字") String videoName,@ApiParam(name = "describe",value = "文件的描述") String describe,@ApiParam(name = "zipName",value = "固件的名字") String zipName) throws IOException {
 
-        if(videoName == null){
-            throw new RuntimeException("请填写视频的名字");
+
+        if(zipName != null){
+            if(zipName == null){
+                throw new RuntimeException("请填写固件的名字");
+            }
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            File tempFile = new File(FilePath.path);
+            String path = FilePath.zip;
+
+            String fileName = null;
+            if(StringUtils.equals("地面站",zipName)){
+                indexService.deleteFile(zipName,path);
+                videoService.deleteZipInformation(zipName);
+            }
+
+            if(videoService.isContain(zipName)){
+                throw new RuntimeException("这个固件名字已经被使用");
+            }
+
+
+            fileName = indexService.update(files, path);
+            String[] suffix = fileName.split("\\.");
+
+            if(fileName == null){
+                throw new RuntimeException("文件并没有上传成功");
+            }
+            String titleName = zipName;
+            zipName +=".";
+            zipName += suffix[suffix.length-1];
+            indexService.renameTo(fileName,zipName,path);
+
+            Video video = new Video();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String createTime = simpleDateFormat.format(new Date());
+            video.setCreateTime(createTime);
+            video.setPath("static/zip/"+zipName);
+
+            video.setDescribestatic(describe);
+
+            video.setVideoName(titleName);
+            videoService.addVideo(video);
+            return RestfulJson.isOk("上传成功");
+        }else{
+            if(videoName == null){
+                throw new RuntimeException("请填写视频的名字");
+            }
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            File tempFile = new File(FilePath.path);
+            String path = FilePath.video;
+            if(videoService.isContain(videoName)){
+                throw new RuntimeException("这个固件名字已经被使用");
+            }
+
+            String fileName = indexService.update(files, path);
+            String[] suffix = fileName.split("\\.");
+
+            if(fileName == null){
+                throw new RuntimeException("文件并没有上传成功");
+            }
+            String titleName = videoName;
+            videoName +=".";
+            videoName += suffix[suffix.length-1];
+            indexService.renameTo(fileName,videoName,path);
+
+            Video video = new Video();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String createTime = simpleDateFormat.format(new Date());
+            video.setCreateTime(createTime);
+            video.setPath("static/video/"+videoName);
+
+            video.setDescribestatic(describe);
+
+            video.setVideoName(titleName);
+            videoService.addVideo(video);
+            return RestfulJson.isOk("上传成功");
         }
-        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        File tempFile = new File(FilePath.path);
-        String path = FilePath.video;
-        if(videoService.isContain(videoName)){
-            throw new RuntimeException("这个固件名字已经被使用");
-        }
 
-        String fileName = indexService.update(files, path);
-        String[] suffix = fileName.split("\\.");
 
-        if(fileName == null){
-            throw new RuntimeException("文件并没有上传成功");
-        }
-        String titleName = videoName;
-        videoName +=".";
-        videoName += suffix[suffix.length-1];
-        indexService.renameTo(fileName,videoName,path);
-
-        Video video = new Video();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String createTime = simpleDateFormat.format(new Date());
-        video.setCreateTime(createTime);
-        video.setPath("static/video/"+videoName);
-
-        video.setDescribestatic(descirbe);
-
-        video.setVideoName(titleName);
-        videoService.addVideo(video);
-        return RestfulJson.isOk("上传成功");
 
     }
 
 
     //上传固件
-    @PutMapping(value = "zip",produces="application/json;charset=UTF-8")
+//    @PostMapping(value = "zip",produces="application/json;charset=UTF-8")
+//    @ApiOperation(value = "上传固件",notes = "file字段对应的是固件")
+//    public RestfulJson updateZip(HttpServletRequest request, @ApiParam(name = "zipName",value = "固件的名字") String zipName,@ApiParam(name = "describe",value = "文件的描述") String describe) throws IOException {
+//
+//        if(zipName == null){
+//            throw new RuntimeException("请填写固件的名字");
+//        }
+//        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+//        File tempFile = new File(FilePath.path);
+//        String path = FilePath.zip;
+//
+//        String fileName = null;
+//            if(StringUtils.equals("地面站",zipName)){
+//                indexService.deleteFile(zipName,path);
+//                videoService.deleteZipInformation(zipName);
+//            }
+//
+//            if(videoService.isContain(zipName)){
+//                throw new RuntimeException("这个固件名字已经被使用");
+//            }
+//
+//
+//        fileName = indexService.update(files, path);
+//        String[] suffix = fileName.split("\\.");
+//
+//        if(fileName == null){
+//            throw new RuntimeException("文件并没有上传成功");
+//        }
+//        String titleName = zipName;
+//        zipName +=".";
+//        zipName += suffix[suffix.length-1];
+//        indexService.renameTo(fileName,zipName,path);
+//
+//        Video video = new Video();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String createTime = simpleDateFormat.format(new Date());
+//        video.setCreateTime(createTime);
+//        video.setPath("static/zip/"+zipName);
+//
+//        video.setDescribestatic(describe);
+//
+//        video.setVideoName(titleName);
+//        videoService.addVideo(video);
+//        return RestfulJson.isOk("上传成功");
+//
+//    }
+
+    @PostMapping(value = "zip",produces="application/json;charset=UTF-8")
     @ApiOperation(value = "上传固件",notes = "file字段对应的是固件")
     public RestfulJson updateZip(HttpServletRequest request, @ApiParam(name = "zipName",value = "固件的名字") String zipName,@ApiParam(name = "describe",value = "文件的描述") String describe) throws IOException {
 
@@ -135,14 +228,14 @@ public class StaticResourceController {
         String path = FilePath.zip;
 
         String fileName = null;
-            if(StringUtils.equals("地面站",zipName)){
-                indexService.deleteFile(zipName,path);
-                videoService.deleteZipInformation(zipName);
-            }
+//        if(StringUtils.equals("地面站",zipName)){
+//            indexService.deleteFile(zipName,path);
+//            videoService.deleteZipInformation(zipName);
+//        }
 
-            if(videoService.isContain(zipName)){
-                throw new RuntimeException("这个固件名字已经被使用");
-            }
+        if(videoService.isContain(zipName)){
+            throw new RuntimeException("这个固件名字已经被使用");
+        }
 
 
         fileName = indexService.update(files, path);
