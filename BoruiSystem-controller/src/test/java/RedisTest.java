@@ -4,6 +4,7 @@ import net.seehope.UserService;
 import net.seehope.common.SmsConstant;
 import net.seehope.mapper.SendMapper;
 import net.seehope.mapper.UsersMapper;
+import net.seehope.pojo.Send;
 import net.seehope.pojo.Users;
 import net.seehope.pojo.bo.SmsBo;
 import net.seehope.pojo.bo.StoreSendBo;
@@ -52,14 +53,16 @@ public class RedisTest {
     //发送物流测试
     @Test
     public void flow(){
-        String deliveryId = "12345";
-        String phone = "13060961170";
-        String productName = "小说";
+        String deliveryId = "SF 131 127 634 8899";
+        String phone = "15976286379";
+        String productName = "情趣内衣";
         String deliveryName = "韵达";
 
         String message = SmsUtils.connect("code1",productName,"code2",deliveryName,"code3",deliveryId);
+        Send send = new Send();
+        send.setInformation(message);
 
-       // smsSendService.sendFlow(message,phone);
+       smsSendService.sendFlow(phone,send);
     }
     //测试发送订阅短信
     @Test
