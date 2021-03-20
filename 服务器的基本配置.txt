@@ -1,0 +1,11 @@
+服务器账号
+username: khz7fmm6password: 22f1ea46
+
+
+外网面板地址: http://8.129.181.245:8888/91a5b481内网面板地址: http://172.26.86.212:8888/91a5b481redis密码：AREai8Tk3nX8MzLB
+
+数据库账号和密码
+username: borui
+password: j6S2WsSpnXGTTjEr
+
+

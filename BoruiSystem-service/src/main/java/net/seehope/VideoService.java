@@ -23,4 +23,6 @@ public interface VideoService {
 
     //判断是否包含这个固件的名字
     boolean isContain(String zipName);
+    //得到所有的pdf
+    List<VideoVo> getAllPdf() throws ParseException;
 }

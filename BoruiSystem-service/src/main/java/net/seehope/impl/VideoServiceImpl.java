@@ -84,6 +84,26 @@ public List<VideoVo> getAllVideos() throws ParseException {
         return false;
     }
 
+    @Override
+    public List<VideoVo> getAllPdf() throws ParseException {
+        List<Video> videoList =  videoMapper.getAllPdf();
+        List<VideoVo> videoList1 = new ArrayList<>();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(Video video:videoList){
+            VideoVo videoVo = new VideoVo();
+            Date date = simpleDateFormat.parse(video.getCreateTime());
+            String createTime = simpleDateFormat.format(date).toString();
+            videoVo.setCreateTime(createTime);
+            videoVo.setPath(video.getPath());
+            videoVo.setDescribe(video.getDescribestatic());
+            videoVo.setVideoName(video.getVideoName());
+            videoList1.add(videoVo);
+        }
+        return videoList1;
+
+    }
+
 
     @Override
     public void addVideo(Video video) {

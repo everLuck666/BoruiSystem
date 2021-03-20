@@ -16,4 +16,9 @@
     "%.zip" or path like "%.rar"
 </select>
 
+    <select id="getAllPdf" resultType="net.seehope.pojo.Video">
+    select videoName,path,describeStatic,createTime from video where path like
+    "%.pdf"
+</select>
+
 </mapper>

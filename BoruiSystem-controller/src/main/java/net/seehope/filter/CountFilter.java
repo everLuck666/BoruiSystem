@@ -66,31 +66,41 @@ public class CountFilter implements Filter {
 
             ipMap.put(ip,count+1);
         }else{
+
             ipMap.put(ip,1);
 
             Date date = new Date();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String time = simpleDateFormat.format(date);
 
-            synchronized (this){
-                CountPeople countPeopleTemp = new CountPeople();
-                countPeopleTemp.setTime(time);
-                CountPeople countPeopleValue = countPeopleMapper.selectOne(countPeopleTemp);
-                if(countPeopleValue == null){
-                    countPeopleTemp.setCount("1");
-                    countPeopleMapper.insert(countPeopleTemp);
-                    logger.info("今天第一次记录访客");
-                }else{
-                    Integer countPeople = Integer.parseInt(countPeopleValue.getCount());
-                    countPeople++;
-                    countPeopleMapper.delete(countPeopleValue);
-                    countPeopleValue.setCount(countPeople+"");
-                    countPeopleMapper.insert(countPeopleValue);
+            ServletContext context3 = filterConfig.getServletContext();
+            Map<String, Integer> ipMap3 = (Map<String, Integer>) context3.getAttribute("ipMap");
+            if(!ipMap3.containsKey(ip)){
+                synchronized (this){
+                    ServletContext context2 = filterConfig.getServletContext();
+                    Map<String, Integer> ipMap2 = (Map<String, Integer>) context2.getAttribute("ipMap");
+                    if(!ipMap2.containsKey(ip)){
+                        CountPeople countPeopleTemp = new CountPeople();
+                        countPeopleTemp.setTime(time);
+                        CountPeople countPeopleValue = countPeopleMapper.selectOne(countPeopleTemp);
+                        if(countPeopleValue == null){
+                            countPeopleTemp.setCount("1");
+                            countPeopleMapper.insert(countPeopleTemp);
+                            logger.info("今天第一次记录访客");
+                        }else{
+                            Integer countPeople = Integer.parseInt(countPeopleValue.getCount());
+                            countPeople++;
+                            countPeopleMapper.delete(countPeopleValue);
+                            countPeopleValue.setCount(countPeople+"");
+                            countPeopleMapper.insert(countPeopleValue);
+                        }
+                        context2.setAttribute("ipMap", ipMap);
+                    }
                 }
             }
 
+
         }
-        context.setAttribute("ipMap", ipMap);
         chain.doFilter(request, response);
     }
     @Override

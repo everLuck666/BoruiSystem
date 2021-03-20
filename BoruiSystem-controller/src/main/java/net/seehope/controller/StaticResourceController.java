@@ -224,12 +224,24 @@ public class StaticResourceController {
             throw new RuntimeException("请填写固件的名字");
         }
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        File tempFile = new File(FilePath.path);
+        MultipartFile file = files.get(0);
+
+        String fileNameTemp = file.getOriginalFilename();
+
+        boolean flag = false;//判断是不是pdf
+
+        String[] suffix2 = fileNameTemp.split("\\.");
         String path = FilePath.zip;
+        if(suffix2[suffix2.length-1].equalsIgnoreCase("pdf")){
+            path = FilePath.pdf;
+            flag = true;
+        }
+        File tempFile = new File(FilePath.path);
+
 
         String fileName = null;
 
-        if(StringUtils.equals("地面站",zipName)){
+        if(StringUtils.equals("地面站",zipName)&& !flag){
             indexService.deleteFile(zipName,path);
             videoService.deleteZipInformation(zipName);
         }
@@ -254,7 +266,12 @@ public class StaticResourceController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String createTime = simpleDateFormat.format(new Date());
         video.setCreateTime(createTime);
-        video.setPath("static/zip/"+zipName);
+        if(flag){
+            video.setPath("static/pdf/"+zipName);
+        }else{
+            video.setPath("static/zip/"+zipName);
+        }
+
 
         video.setDescribestatic(describe);
 
@@ -263,6 +280,54 @@ public class StaticResourceController {
         return RestfulJson.isOk("上传成功");
 
     }
+
+//
+//    @PostMapping(value = "pdf",produces="application/json;charset=UTF-8")
+//    @ApiOperation(value = "上传pdf",notes = "file字段对应的是固件")
+//    public RestfulJson updatepdf(HttpServletRequest request, @ApiParam(name = "pdfName",value = "固件的名字") String pdfName,@ApiParam(name = "describe",value = "文件的描述") String describe) throws IOException {
+//
+//        if(pdfName == null){
+//            throw new RuntimeException("请填写固件的名字");
+//        }
+//        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+//        File tempFile = new File(FilePath.path);
+//        String path = FilePath.zip;
+//
+//        String fileName = null;
+//
+//        if(StringUtils.equals("地面站",pdfName)){
+//            indexService.deleteFile(pdfName,path);
+//            videoService.deleteZipInformation(pdfName);
+//        }
+//
+//        if(videoService.isContain(pdfName)){
+//            throw new RuntimeException("这个固件名字已经被使用");
+//        }
+//
+//
+//        fileName = indexService.update(files, path);
+//        String[] suffix = fileName.split("\\.");
+//
+//        if(fileName == null){
+//            throw new RuntimeException("文件并没有上传成功");
+//        }
+//        String titleName = pdfName;
+//        pdfName +=".";
+//        pdfName += suffix[suffix.length-1];
+//        indexService.renameTo(fileName,pdfName,path);
+//
+//        Video video = new Video();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String createTime = simpleDateFormat.format(new Date());
+//        video.setCreateTime(createTime);
+//        video.setPath("static/pdf/"+pdfName);
+//
+//        video.setDescribestatic(describe);
+//
+//        video.setVideoName(titleName);
+//        videoService.addVideo(video);
+//        return RestfulJson.isOk("上传成功");
+//    }
     @DeleteMapping(value = "video",produces="application/json;charset=UTF-8")
     @ApiOperation("删除视频")
 
@@ -274,6 +339,14 @@ public class StaticResourceController {
         return RestfulJson.isOk("删除成功");
     }
 
+    @GetMapping(value = "pdf",produces = "application/json;charset=UTF-8")
+    @ApiOperation("得到所有的pdf")
+    public RestfulJson getAllPdf() throws ParseException {
+
+        return RestfulJson.isOk(videoService.getAllPdf());
+
+    }
+
 
     @GetMapping("download/{fileName:.+}")
     @ApiOperation("下载文件，需要传递文件的文件名字在访问地址中")
@@ -281,7 +354,14 @@ public class StaticResourceController {
         System.out.println("fileName"+fileName);
         File file = new File(FilePath.path);
 
+        String[] fileName2 = fileName.split("\\.");
         String path = FilePath.zip;
+
+        if(fileName2[fileName2.length-1].equalsIgnoreCase("pdf")){
+          path = FilePath.pdf;
+        }
+
+
 
         File zipFile = new File(file.getAbsolutePath()+path+fileName);
 

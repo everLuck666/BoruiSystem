@@ -25,8 +25,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/borui?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&autoReconnect=true
-    username: borui
-    password: j6S2WsSpnXGTTjEr
+    username: test
+    password: test
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       # 最小空闲链接

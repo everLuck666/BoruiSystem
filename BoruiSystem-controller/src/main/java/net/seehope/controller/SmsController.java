@@ -54,8 +54,10 @@ public class SmsController {
         String managerName = request.getAttribute("managerName").toString();
 
         if(identity == null){
+            System.out.println("我执行了");
             smsSendService.sendAllPeople(messageValue,managerName);
         }else{
+            System.out.println("我执行过了");
             smsSendService.sendPeopel(messageValue,managerName);
         }
         return RestfulJson.isOk("发送成功");

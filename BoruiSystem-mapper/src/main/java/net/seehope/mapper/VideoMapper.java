@@ -16,6 +16,8 @@ public interface VideoMapper extends tk.mybatis.mapper.common.Mapper<Video> {
 
 
     List<Video> getAllZip();
+
+    List<Video> getAllPdf();
 }
 
 
