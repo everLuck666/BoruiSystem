@@ -130,4 +130,14 @@ public class IndexServiceImpl implements IndexService {
 //            logger.warn("请注意要删除的文件不存在");
 //        }
     }
+
+    @Override
+    public void deleteOneFile(String fileName, String path) {
+        File tempFile = new File(FilePath.path);
+        File dest = new File(tempFile.getAbsolutePath() + path+fileName);
+
+        dest.delete();
+       // File[] tempFiles = dest.listFiles();
+
+    }
 }

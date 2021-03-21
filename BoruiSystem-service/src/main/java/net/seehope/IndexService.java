@@ -19,6 +19,9 @@ public interface IndexService {
     //得到今日结束时间
     Long getEndTime();
 
-    //删除文件
+    //删除包含关键字的文件
     void deleteFile(String fileName,String path);
+
+    //删除指定的文件
+    void deleteOneFile(String fileName,String path);
 }

@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -375,5 +376,35 @@ public class StaticResourceController {
         byte[] bytes = FileUtils.readFileToByteArray(zipFile);
         return new ResponseEntity<byte[]>(bytes,headers, HttpStatus.CREATED);
     }
+
+
+    @DeleteMapping("delete")
+    @Transactional
+    public RestfulJson deleteFile(@RequestBody  Map map){
+
+        String fileName = map.get("fileName").toString();
+
+        String[] suffix = fileName.split("\\.");
+        String path = "";
+
+        if(suffix[suffix.length-1].equalsIgnoreCase("pdf")){
+         path = FilePath.pdf;
+        }else {
+            path = FilePath.zip;
+        }
+
+
+            indexService.deleteOneFile(fileName,path);
+
+            String tempName = fileName.substring(0,fileName.lastIndexOf("."));
+
+            videoService.deleteZipInformation(tempName);
+
+            return RestfulJson.isOk("删除成功");
+
+    }
+
+
+
     
 }
